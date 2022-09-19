@@ -36,15 +36,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
       
       - name: Install dependencies
-        script:
+        run:
+          script:
           - python -m pip install --upgrade pip
           - python -m pip install -r requirements/dev.txt
 
       - name: Correct Linter
-        script:
-          - autopep8 -i -r ./
+        run: |
+          autopep8 -i -r ./
 
 
       - name: Analysing the code with pylint
-        script: 
-          - pylint $(git ls-files '*.py')
+        run: |
+          pylint $(git ls-files '*.py')
