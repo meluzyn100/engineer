@@ -34,15 +34,15 @@ jobs:
           python-version: ${{ matrix.python-version }}
       
       - name: Install dependencies
-        run: 
+        run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements/dev.txt
 
       - name: Correct Linter
-        run:
+        run: |
           autopep8 -i -r ./
 
 
       - name: Analysing the code with pylint
-        run: 
+        run: |
           pylint $(git ls-files '*.py')
