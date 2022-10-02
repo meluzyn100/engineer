@@ -4,8 +4,9 @@ Game war handling script
 
 
 import random
-import collections
 import numpy as np
+import collections
+import multiprocessing
 
 
 deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]*4  # deck of 52 cards
@@ -129,18 +130,19 @@ def game(player_1, player_2, parameters):
             return 1
 
 
-def symulation(games_to_play, parameters):
-    score = {1: 0, 2: 0}
-    for i in range(games_to_play):
-        random.shuffle(deck)
-        player_1 = Player()
-        player_2 = Player()
-        player_1.add_cards(deck[0:int(deck_len/2)])
-        player_2.add_cards(deck[int(deck_len/2):deck_len])
-        winner = game(player_1, player_2, parameters)
-        score[winner] += 1
-    return score
+def symulation(parameters):
+    random.shuffle(deck)
+    player_1 = Player()
+    player_2 = Player()
+    player_1.add_cards(deck[0:int(deck_len/2)])
+    player_2.add_cards(deck[int(deck_len/2):deck_len])
+    winner = game(player_1, player_2, parameters)
+    return winner
 
 
 if "__main__" == __name__:
-    print(symulation(games_to_play, parameters_0))
+    p = multiprocessing.Pool()
+    par = [parameters_0]*games_to_play
+    results = p.map(symulation, par)
+    results = collections.Counter(results)
+    print(results)
