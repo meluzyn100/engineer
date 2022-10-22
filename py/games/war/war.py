@@ -118,7 +118,7 @@ def strategy(cards, parameters):
 def game(player_1, player_2, parameters):
     while 1:
         cards, winner = battle(player_1, player_2)
-        cards = strategy(cards, parameters)
+        cards = strategy(cards,     )
         if winner == 1:
             player_1.add_cards(cards)
         else:
