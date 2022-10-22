@@ -18,7 +18,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if name:
         return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
     else:
-        f = open("hello.txt", "r")
+        f = open("hello.txt", "+r")
+        print(f.readlines())
+        f.write("\nhello")
+        f.close()
         return func.HttpResponse(
              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
              status_code=200
