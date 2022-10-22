@@ -9,7 +9,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     s = time.time()
     x = np.sum(np.random.randint(0, 2, 10))
-    time.sleep(60)
+    # time.sleep(60)
     end = time.time() - s
     name = req.params.get('name')
     if not name:
