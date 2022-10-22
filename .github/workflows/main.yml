@@ -38,7 +38,7 @@ jobs:
       
       - name: Correct Linter
         run: |
-          autopep8 -i -r ./
+          autopep8 -i -r ./py
 
 
       - name: Analysing the code with pylint
