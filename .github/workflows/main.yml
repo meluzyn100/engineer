@@ -42,5 +42,5 @@ jobs:
 
 
       - name: Analysing the code with pylint
-        run: |
-          pylint $(git ls-files 'py/*.py')
+        run: |          # pylint $(git ls-files 'py/*.py')
+          pycodestyle py/
