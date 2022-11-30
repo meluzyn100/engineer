@@ -16,6 +16,9 @@ x = [[parameters_0, parameters_0]]*games_to_play
 #                     globals=globals(),
 #                     number=n)/n)
 
+
+print("asdas as" + "1223")
+
 print(timeit.timeit('test(symulation, x)',
                     globals=globals(),
                     number=n)/n)

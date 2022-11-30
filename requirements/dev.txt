@@ -1,4 +1,4 @@
 -r base.txt
-pylint
-pytest
-autopep8
+pylint==2.15.7
+pytest==7.2.0
+autopep8==2.0.0
