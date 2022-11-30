@@ -9,3 +9,14 @@ notes
 
 #tekst
 tekst
+
+#latex
+*.log
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.gz
+*.toc
