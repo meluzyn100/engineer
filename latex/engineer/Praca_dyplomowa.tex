@@ -97,7 +97,11 @@
 %
 % Krótkie streszczenia po polsku i angielsku
 % - nie dłuższe niż 530 znaków.
-\streszczenie{Tutaj piszemy krótkie streszczenie pracy (nie powinno być dłuższe niż 530 znaków).}
+\streszczenie{Celem rozprawy jest wyznaczenie nieoczekiwanych strategii w grach częściowo obserwowalnych za pomocą metod
+	stochastycznej optymalizacji. Praca będzie opierać się na wynikach Cauwet i Teytauda z 2018 roku, w których
+	przedstawili nieoczekiwane strategie dla kilku klasycznych gier oraz kilku metod optymalizacji. Podjęta zostanie
+	próba odtworzenia oraz rozszerzenia wyników na kolejną grę. Przeprowadzona zostanie analiza porównawcza dla
+	różnych metod optymalizacji.}
 \streszczenieang{Tutaj piszemy krótkie streszczenie pracy w języku angielskim (nie powinno być dłuższe niż 530 znaków).}
 %
 % Podajemy najważniejsze słowa kluczowe po polsku i angielsku
@@ -124,6 +128,18 @@
 \newtheorem{note}[theorem]{Uwaga}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage{algpseudocode,algorithm,algorithmicx}
+\usepackage{enumitem}
+
+\DeclareRobustCommand{\bbone}{\text{\usefont{U}{bbold}{m}{n}1}}
+\DeclareMathOperator{\EX}{\mathbb{E}}% expected value
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -197,14 +213,185 @@ Rysunki do pracy dyplomowej należy wstawiać w sposób podobny do wstawiania ta
 
 
 \chapter{Definicje, lematy, twierdzenia, przykłady i wnioski}
-Definicje, lematy, twierdzenia, przykłady i wnioski piszemy w pracy tak:
-\begin{definition}[Martyngał]
-Tu piszemy treść definicji martyngału.
-\end{definition}
-\begin{lemma}[]% w nawiasie kwadratowym można napisać jego nazwę
-Tu piszemy treść lematu.
-\end{lemma}
+Celem algorytmów których będziemy wykorzystywać w poniższej pracy jest znalezienie optymalnej strategi w grach częściowo obserwowalnych. Zdefiniujmy zatem podstawowe pojęcia potrzebne nam do tego aby matematycznie opisać czym jest gra i czym jest strategia optymalna.
+W tym celu wprowadzi kilka podstawowych definicji.
 
+\section{Typy gier }
+Podstawowa kategorią na jaką możemy podzielić gry, jest podział ze względu na czas w którym gracze podejmują decyzje:
+
+\begin{definition}[Gra w postaci strategicznej]
+Jest to typ gry, w której gracze podejmują decyzje w tym samym
+momencie.
+\end{definition}
+\begin{definition}[Gra w postaci ekstensywnej]
+	Jest to typ gry, w której gracze podejmują decyzje we wcześniej
+	ustalonej kolejności.
+\end{definition}
+Przykładami gier w postaci strategicznej sa gry papier-kamień-nożyce, oszust czy też mora. Natomiast przykładami gier w postaci ekstensywnej są szachy, warcaby oraz go.
+
+Gry możemy również dzielić ze względu na posiadana wiedzę.
+\begin{definition}[Gra z kompletną informacją]
+	Jest to typ gry, w której gracze posiadają informacje o możliwych
+	przyszłych wynikach gry i o zbiorach możliwych strategii.
+\end{definition}
+\begin{definition}[Gra częściowo obserwowalna]
+	Jest to przeciwnie gier z kompletną informacją.
+\end{definition}
+Przykładami gier z kompletną informacją są szachy, warcaby oraz go.
+Natomiast przykładami gier częściowo obserwowanymi są wszelkie gry posiadające w rozgrywce pewien elementy losowe takie jak rzut kostką czy też dobieranie kart. 
+
+Istnieje jeszcze wiele innych podziałów gier ze wglądu na kategorie takie jak liczba graczy, ze względu na zbiory dostępnych akcji, ze względu na możliwość tworzenia koalicji i wiele wiele innych.
+
+\section{Definicje i Oznaczenia}
+Wprowadźmy podstawowe oznaczenia potrzebne nam do tego aby móc zdefiniować czym strategia optymalna.
+\subsection{Strategie proste}
+\begin{itemize}
+	\item $ N = \{1,2,\dots, n\} $ -- zbiór graczy,
+	\item $A_i,\; i \in N $ -- niepusty zbiór strategii  czystych gracza $i$,
+	\item $m_i = |A_i|$ -- liczba strategi gracza $i$,
+	\item $A = \displaystyle\prod_{i \in N} A_i$ -- zbiór wszystkich strategii gry, 
+	\item $u_i : A \rightarrow \mathbb{R} $ -- funkcja wypłaty gracza $i$,
+	\item $a=(a_1,a_2,\dots,a_n)=(a_i)_{i \in N},\; a_i \in A_i$ -- profil gry w strategiach czystych,
+	\item $u_i(a) = u_i(a,a_{-i})$ -- wypłata gracza $i$ z profilu $a$,
+	\item $a_{-i} = (a_i)_{i\in N \setminus \{i\}}$, -- profil wszystkich strategii poza strategią graca $i$.
+\end{itemize}
+	\begin{definition}[Gra strategiczna]
+		Grą strategiczną nazywamy trójkę $GS = \langle N, (A_i)_{i \in N},(u_i)_{i \in N} \rangle $.
+	\end{definition}
+	
+	\begin{definition}[Równowaga Nasha w strategiach czystych gry strategicznej]
+		Równowaga Nasha w strategiach czystych gry strategicznej jest to taki profil gry $a^*= (a_1^*,a_2^*,\dots,a_N^*)\in A$, takim, że:
+		\begin{align*}
+			\displaystyle\mathop{\forall}_{i \in N} 
+			\displaystyle\mathop{\forall}_{a_i \in A_i} \quad
+			u_i(a_i^*,a_{-i}^*) \ge u_i(a_i, a_{-i}^*)
+		\end{align*}
+	\end{definition}
+	Zatem jest to profil gry w którym istnieje strategia czystej dająca niegorszeń  wyniki od dowolnej innej strategii czystej.
+	Okazuje się jednak że taki stan nie zawsze istnieje w strategiach czystych, np. w grze kamień-papier-nożyce strategia grania tylko kamienia daje gorsze rezultat przeciwko graniu tylko papieru. Podobnie z strategią grania tylko nożyc i grania tylko papieru.
+	\subsection{Strategie mieszane}
+	\begin{definition}[Strategia mieszana]
+		Strategia mieszana $\sigma_i$ graca $i$ w grze strategicznej $GS = \langle N, (A_i)_{i \in N},(u_i)_{i \in N} \rangle $. Nazywamy rozkład prawdopodobieństwa na zbiorze strategi czystych $A_i$:
+		\begin{align*}
+			\sigma_i = (\sigma_{i1}, \sigma_{i2},\dots,\sigma_{im_i})
+		\end{align*}
+	gdzie $\sigma_{ik}$ oznacza prawdopodobieństwo, że gracz $i$ zagra strategie czysta $k\in A_i$.  
+	\end{definition}
+	Wprowadźmy dodatkowe oznaczenia:
+	\begin{fact}
+		Strategia czysta jest szczególnym przypadkiem strategi mieszanych w którym prawdopodobieństwo zagrania jednej z dostępnych strategii wynosi 1.
+	\end{fact}
+	Wprowadźmy dodatkowe oznaczenia:
+ 	\begin{itemize}
+ 		\item $\Sigma_i  = \left\{ \sigma_i: A_i \rightarrow [0,1],\displaystyle\sum_{k=1}^{n} \sigma_{ik} = 1, \sigma_{ki}\ge 0 \right\}$ -- zbiór strategii mieszanych gracza $i$,
+ 		\item  $\sigma = (\sigma_1, \sigma_2,\dots,\sigma_n)$ -- profil gry,
+ 		\item $u_i(\sigma) = u_i(\sigma_i,\sigma_{-i})$ -- wypłata gracza $i$ z profilu $\sigma$,
+ 		\item $\sigma_{-i} = (\sigma_i)_{i\in N \setminus \{i\}}$, -- profil wszystkich strategii poza strategią graca $i$. 
+ 	\end{itemize}
+	\begin{definition}[Równowaga Nasha w strategiach mieszanej gry strategicznej]
+		Profil gry strategicznej $\sigma_i^*$ jest Równowagą Nasha gdy:
+		\begin{equation*}
+			\displaystyle\mathop{\forall}_{i \in N} 
+			\displaystyle\mathop{\forall}_{\sigma_i \in \Sigma_i} \quad
+			u_i(\sigma_i^*,\sigma_{-i}^*) \ge u_i(\sigma_i, \sigma_{-i}^*)
+		\end{equation*}
+	Równowaga Nasha interpretujemy jako taki profil gry, w którym żaden z graczy nie opłaca się zmieniać swojej strategi, ponieważ nie skutkuje to zwiększeniem swoich zysków.
+	\end{definition}
+
+	\section{Twierdzenia}
+	Algorytmy wykorzystywane w poniższej pracy oparte są o dwa twierdzenia a dokładniej o szczególne przypadki wynikające z nierówności \ref{Hoffding ineq} i \ref{Bernsteina emp ineq}:
+	\begin{theorem}[Nierówność Hoffdinga]
+		\label{Hoffding ineq}
+		Niech $X_1,X_2,\dots,X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $a_i \le X_i \le b_i$, wtedy:
+		\begin{gather*}
+			S_t = \sum_{i=1}^{t} X_i,\quad c_i = b_i - a_i, \\
+			P(|S_t - \EX(S_t)| \ge \epsilon ) \le 2\exp\left( -\frac{2\epsilon^2}{\sum_{i=1}^{n} c_i^2} \right)
+		\end{gather*}
+	\end{theorem}
+	\begin{lemma}
+		\label{Hoffding ineq lemma}
+		Niech $X_1,X_2,\dots,X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $0 \le X_i \le 1$, wtedy:
+		\begin{gather*}
+			\overline{S}_t = \frac{S_t}{t},\quad 
+			\mu = \EX(\overline{S}_t),\quad  	
+			P(|\overline{S}_t - \mu | \le \epsilon ) = 1 - \delta, \\
+			\epsilon \le  \sqrt{\frac{\ln(2/\delta)}{2t}}   
+		\end{gather*}
+	\end{lemma}
+
+		\begin{theorem}[Empiryczna nierówność Bernsteina]
+		\label{Bernsteina emp ineq}
+		Niech $X_1,X_2,\dots,X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $a \le X_i \le b$, wtedy:
+		\begin{gather*}
+			P(|S_n - \EX(E_n)| \ge \epsilon ) = \delta, \quad \overline \sigma_t^2 = \frac{1}{t}\sum_{i=i}^{t}(S_i - \overline{S}_t)^2, \\
+			|S_t - \EX(E_t)| \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta)}{t}} + \frac{3 R \ln{(3 / \delta)}}{t}
+		\end{gather*}
+	\end{theorem}
+	\begin{lemma}\label{Bernsteina emp ineq lemma}
+		Niech $X_1,X_2,\dots,X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $0 \le X_i \le 1$, wtedy:
+		\begin{gather*}
+			P(|\overline{S}_t - \mu | \le \epsilon ) = 1 - \delta,\\
+			\epsilon \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta)}{t}} + \frac{3  \ln{(3 / \delta)}}{t}
+		\end{gather*}
+	\end{lemma}
+	\section{Problem porównań wielokrotnych}
+	Załóżmy, że z prawdopodobieństwem $1-\delta$ chcemy wiedzieć który z 2 graczy, $p_1$ i $p_2$ jest lepszy. W tym
+	celu będziemy przeprowadzać testy statystyczne, dla których
+	prawdopodobieństwo pomyłki k-tego testu wynosi $\delta_k$, aż do momentu, gdy jeden z graczy wygra przeważającą ilość razy. Wtedy po przeprowadzeniu $n$ takich testów
+	\begin{gather*}
+		P(\text{Chociaż jeden z $n$ testów się pomylił}) \overset{(*)}{\le} \sum_{k=1}^n \delta_k \implies  \\
+	P(\text{Żaden test się nie pomylił}) \le 1 - \sum_{k=1}^n \delta_k \\
+	\hspace*{-10cm} (*) \quad P(X+Y) \le P(X) + P(Y) 
+	\end{gather*} 
+	Oznacza to, że musimy wprowadzić pewną korektę, aby
+	ostateczne prawdopodobieństwo popełnienia błędu było
+	mniejsze niż $\delta$.
+	Możemy wprowadzić jedna z dwóch poprawek:
+
+	\begin{enumerate}[label=\thesection.\arabic*]
+		\item \label{korekta 1} Niech $n$ będzie maksymalną liczbą testów jaką pozwalamy wykonać, aby wyznaczyć lepszego
+		gracza. Wtedy $\delta_k=\frac{\delta}{n}$.
+		\item \label{korekta 2} Niech $\delta_k$ spełnia nierówność $ \delta \ge \displaystyle\sum_{k = 1}^{\infty}\delta_k$. Wtedy niezależnie od
+		ilości przeprowadzonych testów, ostateczne
+		prawdopodobieństwo pomyłki będzie nie większe niż
+		$\delta$.
+	\end{enumerate}
+
+	\section{Algorytmy wyścigowe}
+	Jednymi z algorytmów stosującymi dane korekty są algorytmy wyścigowe
+	(Racing \\Algorytms). Dwoma najpopularniejszymi typami algorytmów racingowych są "Hoeﬀding race" oraz "Bernstein race".
+	Oparte są one odpowiednio o Twierdzenie \ref{Hoffding ineq} i Twierdzenie \ref{Bernsteina emp ineq lemma}. Mają one jednak pewną wadę, mogą zajmować one dużą ilość czasu, a w momencie gdy poziom umiejętności porównywanych graczy jest sobie równy (prawdopodobieństwo wygranej wynosi 50\%), wtedy z prawdopodobieństwem równym $1-\delta$ algorytm się nigdy nie zatrzyma.
+	
+	W celu poradzenia sobie z problemami, jakie wiążą się z klasycznymi algorytmami wyścigowymi, wprowadzimy  tzw. Limited Racing algorytm. Załóżmyzatem dodatkowy warunek, który mówi, że przerywamy działanie algorytmu w momencie, gdy empiryczna wartość oczekiwana z prawdopodobieństwem większym bądź równym $1-\delta$ jest znana z dokładnością co do zadanego $\epsilon$.
+	\subsection{Bernstein race without maximum race length}
+	Wykorzystując Lemat~\ref{Bernsteina emp ineq lemma} oraz korektę \ref{korekta 2} z $\delta_k=\frac{c\delta}{k^2}, c=\frac{6}{\pi^2}$ otrzymujemy, że dla ciągu $X_1,X_2,\dots,X_t$ i.i.d. takim, że  $0 \le X_i \le 1$:
+	\begin{align*}
+		\label{Bernstein race without maximum race length}
+		\epsilon_{t,k} \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta_k)}{t}} + \frac{3  \ln{(3 / \delta_k)}}{t} =
+		\overline{\sigma}_t\sqrt{\frac{2\ln(\frac{k^2\pi^2}{2\delta})}{t}} + \frac{3  \ln{(\frac{k^2\pi^2}{2\delta})}}{t}
+	\end{align*}
+	Wtedy $e_{t,k}$ interpretujemy jako maksymalną różnice miedzy empiryczna a teoretyczna wartością oczekiwaną po przeprowadzeniu $k$ testów i rozegraniu $t$ gier, z prawdopodobieństwem pomyłki równym $\delta$.
+	\begin{fact}
+		\label{Fakt Bernstein race without maximum race length}
+		Przeprowadzać testy po każdej rozegranej grze ($k=t$)  $\lim\limits_{t\to\infty} e_{t,k} = 0$ 
+	\end{fact}
+
+	\begin{proof}[Dowód Faktu \ref{Fakt Bernstein race without maximum race length}]
+		\begin{gather*}
+		0\le X_i \le 1 \implies \overline{\sigma}_t^2 \le \frac{1}{2}\\
+		\epsilon_{t,t} =\epsilon_t \le  \sqrt{\frac{\ln(\frac{t^2\pi^2}{2\delta})}{t}} + \frac{3  \ln{(\frac{t^2\pi^2}{2\delta})}}{t} \le \frac{4  \ln{(\frac{t^2\pi^2}{2\delta})}}{t}\\
+		\forall_{a>0} \lim\limits_{t\to\infty} \frac{\ln(at^2)}{t} \overset{\left[\frac{\infty}{\infty}\right]}{=}\lim\limits_{t\to\infty} \frac{2}{t}=0 \implies
+		\lim\limits_{t\to\infty} e_t \le 0 
+		\end{gather*}
+	Zatem $0\le \lim\limits_{t\to\infty} e_t \le 0 \implies \lim\limits_{t\to\infty} e_t = 0$
+	\end{proof}
+	
+	
+	
+	
+	
+	
+	
 {\backmatter \chapter{Podsumowanie}}
 Podsumowanie w pracach matematycznych nie jest obligatoryjne. Warto jednak na zakończenie krótko napisać, co udało nam się zrobić w pracy, a czasem także o tym, czego nie udało się zrobić.
 
