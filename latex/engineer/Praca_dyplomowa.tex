@@ -213,11 +213,11 @@ Rysunki do pracy dyplomowej należy wstawiać w sposób podobny do wstawiania ta
 
 
 \chapter{Definicje, lematy, twierdzenia, przykłady i wnioski}
-Celem algorytmów których będziemy wykorzystywać w poniższej pracy jest znalezienie optymalnej strategi w grach częściowo obserwowalnych. Zdefiniujmy zatem podstawowe pojęcia potrzebne nam do tego aby matematycznie opisać czym jest gra i czym jest strategia optymalna.
+Celem algorytmów, których będziemy wykorzystywać, jest znalezienie optymalnej strategi w grach częściowo obserwowalnych. Zdefiniujmy zatem podstawowe pojęcia potrzebne nam do tego, aby matematycznie opisać czym jest gra i czym jest strategia optymalna.
 W tym celu wprowadzi kilka podstawowych definicji.
 
 \section{Typy gier }
-Podstawowa kategorią na jaką możemy podzielić gry, jest podział ze względu na czas w którym gracze podejmują decyzje:
+Podstawową kategorią, na jaką możemy podzielić gry, jest podział ze względu na czas, w którym gracze podejmują decyzje:
 
 \begin{definition}[Gra w postaci strategicznej]
 Jest to typ gry, w której gracze podejmują decyzje w tym samym
@@ -227,11 +227,11 @@ momencie.
 	Jest to typ gry, w której gracze podejmują decyzje we wcześniej
 	ustalonej kolejności.
 \end{definition}
-Przykładami gier w postaci strategicznej sa gry papier-kamień-nożyce, oszust czy też mora. Natomiast przykładami gier w postaci ekstensywnej są szachy, warcaby oraz go.
+Przykładami gier w postaci strategicznej są gry papier-kamień-nożyce, oszust czy też mora. Natomiast przykładami gier w postaci ekstensywnej są szachy, warcaby oraz go.
 
-Gry możemy również dzielić ze względu na posiadana wiedzę.
+Gry możemy również dzielić ze względu na posiadaną wiedzę.
 \begin{definition}[Gra z kompletną informacją]
-	Jest to typ gry, w której gracze posiadają informacje o możliwych
+	Jest to typ gry, w której gracze mają informacje o możliwych
 	przyszłych wynikach gry i o zbiorach możliwych strategii.
 \end{definition}
 \begin{definition}[Gra częściowo obserwowalna]
@@ -240,10 +240,10 @@ Gry możemy również dzielić ze względu na posiadana wiedzę.
 Przykładami gier z kompletną informacją są szachy, warcaby oraz go.
 Natomiast przykładami gier częściowo obserwowanymi są wszelkie gry posiadające w rozgrywce pewien elementy losowe takie jak rzut kostką czy też dobieranie kart. 
 
-Istnieje jeszcze wiele innych podziałów gier ze wglądu na kategorie takie jak liczba graczy, ze względu na zbiory dostępnych akcji, ze względu na możliwość tworzenia koalicji i wiele wiele innych.
+Istnieje jeszcze wiele innych podziałów gier ze wglądu na kategorie takie jak liczba graczy, ze względu na zbiory dostępnych akcji, ze względu na możliwość tworzenia koalicji i wiele innych.
 
 \section{Definicje i Oznaczenia}
-Wprowadźmy podstawowe oznaczenia potrzebne nam do tego aby móc zdefiniować czym strategia optymalna.
+Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować czym strategia optymalna.
 \subsection{Strategie proste}
 \begin{itemize}
 	\item $ N = \{1,2,\dots, n\} $ -- zbiór graczy,
@@ -267,8 +267,8 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego aby móc zdefiniować cz
 			u_i(a_i^*,a_{-i}^*) \ge u_i(a_i, a_{-i}^*)
 		\end{align*}
 	\end{definition}
-	Zatem jest to profil gry w którym istnieje strategia czystej dająca niegorszeń  wyniki od dowolnej innej strategii czystej.
-	Okazuje się jednak że taki stan nie zawsze istnieje w strategiach czystych, np. w grze kamień-papier-nożyce strategia grania tylko kamienia daje gorsze rezultat przeciwko graniu tylko papieru. Podobnie z strategią grania tylko nożyc i grania tylko papieru.
+	Zatem jest to profil gry, w którym istnieje strategia czystej dająca niegorszeń  wyniki od dowolnej innej strategii czystej.
+	Okazuje się jednak, że taki stan nie zawsze istnieje w strategiach czystych, np. w grze kamień papier nożyce strategia grania tylko kamienia daje gorsze rezultat przeciwko graniu tylko papieru. Podobnie ze strategią grania tylko nożyc i grania tylko papieru.
 	\subsection{Strategie mieszane}
 	\begin{definition}[Strategia mieszana]
 		Strategia mieszana $\sigma_i$ graca $i$ w grze strategicznej $GS = \langle N, (A_i)_{i \in N},(u_i)_{i \in N} \rangle $. Nazywamy rozkład prawdopodobieństwa na zbiorze strategi czystych $A_i$:
@@ -279,7 +279,7 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego aby móc zdefiniować cz
 	\end{definition}
 	Wprowadźmy dodatkowe oznaczenia:
 	\begin{fact}
-		Strategia czysta jest szczególnym przypadkiem strategi mieszanych w którym prawdopodobieństwo zagrania jednej z dostępnych strategii wynosi 1.
+		Strategia czysta jest szczególnym przypadkiem strategij mieszanej, w którym prawdopodobieństwo zagrania jednej z dostępnych strategii wynosi 1.
 	\end{fact}
 	Wprowadźmy dodatkowe oznaczenia:
  	\begin{itemize}
@@ -360,9 +360,9 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego aby móc zdefiniować cz
 	\section{Algorytmy wyścigowe}
 	Jednymi z algorytmów stosującymi dane korekty są algorytmy wyścigowe
 	(Racing \\Algorytms). Dwoma najpopularniejszymi typami algorytmów racingowych są "Hoeﬀding race" oraz "Bernstein race".
-	Oparte są one odpowiednio o Twierdzenie \ref{Hoffding ineq} i Twierdzenie \ref{Bernsteina emp ineq lemma}. Mają one jednak pewną wadę, mogą zajmować one dużą ilość czasu, a w momencie gdy poziom umiejętności porównywanych graczy jest sobie równy (prawdopodobieństwo wygranej wynosi 50\%), wtedy z prawdopodobieństwem równym $1-\delta$ algorytm się nigdy nie zatrzyma.
+	Oparte są one odpowiednio o Twierdzenie \ref{Hoffding ineq} i Twierdzenie \ref{Bernsteina emp ineq lemma}. Mają one jednak pewną wadę, mogą zajmować one dużą ilość czasu, a w momencie, gdy poziom umiejętności porównywanych graczy jest sobie równy (prawdopodobieństwo wygranej wynosi 50\%), wtedy z prawdopodobieństwem równym $1-\delta$ algorytm się nigdy nie zatrzyma.
 	
-	W celu poradzenia sobie z problemami, jakie wiążą się z klasycznymi algorytmami wyścigowymi, wprowadzimy  tzw. Limited Racing algorytm. Załóżmyzatem dodatkowy warunek, który mówi, że przerywamy działanie algorytmu w momencie, gdy empiryczna wartość oczekiwana z prawdopodobieństwem większym bądź równym $1-\delta$ jest znana z dokładnością co do zadanego $\epsilon$.
+	W celu poradzenia sobie z problemami, jakie wiążą się z klasycznymi algorytmami wyścigowymi, wprowadzimy  tzw. Limited Racing algorytm. Załóżmy zatem dodatkowy warunek, który mówi, że przerywamy działanie algorytmu w momencie, gdy empiryczna wartość oczekiwana z prawdopodobieństwem większym bądź równym $1-\delta$ jest znana z dokładnością co do zadanego $\epsilon$.
 	\subsection{Bernstein race without maximum race length}
 	Wykorzystując Lemat~\ref{Bernsteina emp ineq lemma} oraz korektę \ref{korekta 2} z $\delta_k=\frac{c\delta}{k^2}, c=\frac{6}{\pi^2}$ otrzymujemy, że dla ciągu $X_1,X_2,\dots,X_t$ i.i.d. takim, że  $0 \le X_i \le 1$:
 	\begin{align*}
@@ -370,7 +370,7 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego aby móc zdefiniować cz
 		\epsilon_{t,k} \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta_k)}{t}} + \frac{3  \ln{(3 / \delta_k)}}{t} =
 		\overline{\sigma}_t\sqrt{\frac{2\ln(\frac{k^2\pi^2}{2\delta})}{t}} + \frac{3  \ln{(\frac{k^2\pi^2}{2\delta})}}{t}
 	\end{align*}
-	Wtedy $e_{t,k}$ interpretujemy jako maksymalną różnice miedzy empiryczna a teoretyczna wartością oczekiwaną po przeprowadzeniu $k$ testów i rozegraniu $t$ gier, z prawdopodobieństwem pomyłki równym $\delta$.
+	Wtedy $e_{t,k}$ interpretujemy jako maksymalną różnicę między empiryczną a teoretyczną wartością oczekiwaną po przeprowadzeniu $k$ testów i rozegraniu $t$ gier, z prawdopodobieństwem pomyłki równym 
 	\begin{fact}
 		\label{Fakt Bernstein race without maximum race length}
 		Przeprowadzać testy po każdej rozegranej grze ($k=t$)  $\lim\limits_{t\to\infty} e_{t,k} = 0$ 
