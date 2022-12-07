@@ -156,73 +156,76 @@
 %\listoftables
 
 {\backmatter \chapter{Wstęp}}
-We wstępie zapowiadamy, o czym będzie praca. Próbujemy zachęcić czytelnika do dalszej lektury, np. krótko informując, dlaczego wybraliśmy właśnie ten temat i co nas w nim zainteresowało.
+%We wstępie zapowiadamy, o czym będzie praca. Próbujemy zachęcić czytelnika do dalszej lektury, np. krótko informując, dlaczego wybraliśmy właśnie ten temat i co nas w nim zainteresowało.
 
-\chapter{Rozdział pierwszy}
-Tabela \ref{tab:przykladowa} przedstawia przykładową tabelę. Do tworzenia tabeli służą m.in. środowiska \texttt{tabular} oraz \texttt{table}. Istnieje możliwość numeracji dwustopniowej, gdzie pierwsza cyfra oznacza numer rozdziału, a druga – kolejny numer tabeli w tym rozdziale. Tytuł powinien znajdować się centralnie nad tabelą, $12$ pkt odstępu od tekstu zasadniczego nad i pod tabelą wraz z tytułem. Jeśli tabela jest cytowana – należy podać centralnie pod tabelą źródło jej pochodzenia, np. opracowanie własne, opracowano na podstawie danych z GUS.
-\begin{table}[ht]
-\caption{Podstawowa Tabela}
-\centering
-\begin{tabular}{ccc}
-\hline
-\hline                       
-Państwo & PKB (w milionach USD )& Stopa bezrobocia  \\  [0.5ex] 
-\hline 
-Stany Zjednoczone & 75 278 049 & 4,60\%  \\
-Chiny & 11 218 281 & 4,10\%   \\
-Japonia & 4 938 644 & 3,10\%  \\
-Niemcy & 3 466 639 & 6,00\%   \\
-Wielka Brytania & 2 629 188 & 4,60\%  \\ [1ex]  
-\hline 
-\end{tabular}
-\caption*{\textit{Źródło: opracowanie własne}}
-\label{tab:przykladowa} 
-\end{table}
-
-%Do cytowania używamy komendy \texttt{cite}. W nawiasie klamrowym podajemy klucz, którego użyliśmy w pliku \emph{bibliografia.bib}. Przykład: \cite{einstein} lub \cite[chap. 2]{latexcompanion}.
-
-\section{Podrozdział pierwszy}
-
-\begin{table}[H]
-\caption{Podstawowa Tabela}
-\centering
-\begin{tabular}{ccc}
-\hline
-\hline                       
-Państwo & PKB (w milionach USD )& Stopa bezrobocia  \\  [0.5ex] 
-\hline 
-Stany Zjednoczone & 75 278 049 & 4,60\%  \\
-Chiny & 11 218 281 & 4,10\%   \\
-Japonia & 4 938 644 & 3,10\%  \\
-Niemcy & 3 466 639 & 6,00\%   \\
-Wielka Brytania & 2 629 188 & 4,60\%  \\ [1ex]  
-\hline 
-\end{tabular}
-\caption*{\textit{Źródło: opracowanie własne}}
-\label{tab:przykladowa2} 
-\end{table}
-
-\section{Podrozdział drugi}
-
-Rysunki do pracy dyplomowej należy wstawiać w sposób podobny do wstawiania tabel, z~zasadniczą różnicą polegającą na tym, że podpis powinno umieszczać się centralnie pod rysunkiem, a nie powyżej niego. Numeracja i sposób cytowania pozostają bez zmian, przy czym tabele i rysunki nie mają numeracji wspólnej, np. po Tabeli \ref{tab:przykladowa2} występuje Rysunek \ref{rys1} (o ile jest to pierwszy rysunek rozdziału pierwszego), a nie Rysunek $1.3$.
-
-\begin{figure}[ht]
-
-\centering
-                     
-\includegraphics[scale=0.27]{logo_w13.jpg}
-\caption{Podstawowy Rysunek}\label{rys1}
-\end{figure}
-\label{rys:przykladowy} 
+%\chapter{Rozdział pierwszy}
+%Tabela \ref{tab:przykladowa} przedstawia przykładową tabelę. Do tworzenia tabeli służą m.in. środowiska \texttt{tabular} oraz \texttt{table}. Istnieje możliwość numeracji dwustopniowej, gdzie pierwsza cyfra oznacza numer rozdziału, a druga – kolejny numer tabeli w tym rozdziale. Tytuł powinien znajdować się centralnie nad tabelą, $12$ pkt odstępu od tekstu zasadniczego nad i pod tabelą wraz z tytułem. Jeśli tabela jest cytowana – należy podać centralnie pod tabelą źródło jej pochodzenia, np. opracowanie własne, opracowano na podstawie danych z GUS.
+%\begin{table}[ht]
+%\caption{Podstawowa Tabela}
+%\centering
+%\begin{tabular}{ccc}
+%\hline
+%\hline                       
+%Państwo & PKB (w milionach USD )& Stopa bezrobocia  \\  [0.5ex] 
+%\hline 
+%Stany Zjednoczone & 75 278 049 & 4,60\%  \\
+%Chiny & 11 218 281 & 4,10\%   \\
+%Japonia & 4 938 644 & 3,10\%  \\
+%Niemcy & 3 466 639 & 6,00\%   \\
+%Wielka Brytania & 2 629 188 & 4,60\%  \\ [1ex]  
+%\hline 
+%\end{tabular}
+%\caption*{\textit{Źródło: opracowanie własne}}
+%\label{tab:przykladowa} 
+%\end{table}
+%
+%%Do cytowania używamy komendy \texttt{cite}. W nawiasie klamrowym podajemy klucz, którego użyliśmy w pliku \emph{bibliografia.bib}. Przykład: \cite{einstein} lub \cite[chap. 2]{latexcompanion}.
+%
+%\section{Podrozdział pierwszy}
+%
+%\begin{table}[H]
+%\caption{Podstawowa Tabela}
+%\centering
+%\begin{tabular}{ccc}
+%\hline
+%\hline                       
+%Państwo & PKB (w milionach USD )& Stopa bezrobocia  \\  [0.5ex] 
+%\hline 
+%Stany Zjednoczone & 75 278 049 & 4,60\%  \\
+%Chiny & 11 218 281 & 4,10\%   \\
+%Japonia & 4 938 644 & 3,10\%  \\
+%Niemcy & 3 466 639 & 6,00\%   \\
+%Wielka Brytania & 2 629 188 & 4,60\%  \\ [1ex]  
+%\hline 
+%\end{tabular}
+%\caption*{\textit{Źródło: opracowanie własne}}
+%\label{tab:przykladowa2} 
+%\end{table}
+%
+%\section{Podrozdział drugi}
+%
+%Rysunki do pracy dyplomowej należy wstawiać w sposób podobny do wstawiania tabel, z~zasadniczą różnicą polegającą na tym, że podpis powinno umieszczać się centralnie pod rysunkiem, a nie powyżej niego. Numeracja i sposób cytowania pozostają bez zmian, przy czym tabele i rysunki nie mają numeracji wspólnej, np. po Tabeli \ref{tab:przykladowa2} występuje Rysunek \ref{rys1} (o ile jest to pierwszy rysunek rozdziału pierwszego), a nie Rysunek $1.3$.
+%
+%\begin{figure}[ht]
+%
+%\centering
+%                     
+%\includegraphics[scale=0.27]{logo_w13.jpg}
+%\caption{Podstawowy Rysunek}\label{rys1}
+%\end{figure}
+%\label{rys:przykladowy} 
 
 
 \chapter{Definicje, lematy, twierdzenia, przykłady i wnioski}
-Celem algorytmów, których będziemy wykorzystywać, jest znalezienie optymalnej strategi w grach częściowo obserwowalnych. Zdefiniujmy zatem podstawowe pojęcia potrzebne nam do tego, aby matematycznie opisać czym jest gra i czym jest strategia optymalna.
-W tym celu wprowadzi kilka podstawowych definicji.
+Celem algorytmów, których będziemy wykorzystywać, jest znalezienie optymalnej strategi w dwuosobowych grach częściowo obserwowalnych. Zdefiniujmy zatem podstawowe pojęcia potrzebne nam do tego, aby matematycznie opisać czym jest gra i czym jest strategia optymalna.
+W tym celu wprowadzimy kilka podstawowych definicji.
+Definicje dotyczące podstawy teorii gier  pochodzą z \cite{platkowski2012wstkep},\cite{prisner2014game}.
 
 \section{Typy gier }
 Podstawową kategorią, na jaką możemy podzielić gry, jest podział ze względu na czas, w którym gracze podejmują decyzje:
-
+%\begin{definition}[Gra]
+%Gra w matematycznym sensie jest sytuacja, w której gracze podejmują  decyzje zgodnie z określonymi zasadami w celu uzyskania jakiejś wypłaty.
+%\end{definition}
 \begin{definition}[Gra w postaci strategicznej]
 Jest to typ gry, w której gracze podejmują decyzje w tym samym
 momencie.
@@ -231,7 +234,7 @@ momencie.
 	Jest to typ gry, w której gracze podejmują decyzje we wcześniej
 	ustalonej kolejności.
 \end{definition}
-Przykładami gier w postaci strategicznej są gry papier-kamień-nożyce, oszust czy też mora. Natomiast przykładami gier w postaci ekstensywnej są szachy, warcaby oraz go.
+Przykładami gier w postaci strategicznej są gry kamień papier nożyce, oszust czy też mora. Natomiast przykładami gier w postaci ekstensywnej są szachy, warcaby oraz go.
 
 Gry możemy również dzielić ze względu na posiadaną wiedzę.
 \begin{definition}[Gra z kompletną informacją]
@@ -244,7 +247,7 @@ Gry możemy również dzielić ze względu na posiadaną wiedzę.
 Przykładami gier z kompletną informacją są szachy, warcaby oraz go.
 Natomiast przykładami gier częściowo obserwowanymi są wszelkie gry posiadające w rozgrywce pewien elementy losowe takie jak rzut kostką czy też dobieranie kart. 
 
-Istnieje jeszcze wiele innych podziałów gier ze wglądu na kategorie takie jak liczba graczy, ze względu na zbiory dostępnych akcji, ze względu na możliwość tworzenia koalicji i wiele innych.
+Istnieje jeszcze wiele innych podziałów gier ze wglądu na kategorie takie jak liczba graczy,zbiory dostępnych akcji, możliwość tworzenia koalicji i wiele innych.
 
 \section{Definicje i Oznaczenia}
 Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować czym jest strategia optymalna.
@@ -264,14 +267,14 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 	\end{definition}
 	
 	\begin{definition}[Równowaga Nasha w strategiach czystych gry strategicznej]
-		Równowaga Nasha w strategiach czystych gry strategicznej jest to taki profil gry $a^*= (a_1^*,a_2^*,\dots,a_N^*)\in A$, takim, że:
+		Równowaga Nasha w strategiach czystych gry strategicznej jest to profil gry $a^*= (a_1^*,a_2^*,\dots,a_N^*)\in A$, takim, że:
 		\begin{align*}
 			\displaystyle\mathop{\forall}_{i \in N} 
 			\displaystyle\mathop{\forall}_{a_i \in A_i} \quad
 			u_i(a_i^*,a_{-i}^*) \ge u_i(a_i, a_{-i}^*)
 		\end{align*}
 	\end{definition}
-	Zatem jest to profil gry, w którym istnieje strategia czystej dająca niegorszeń  wyniki od dowolnej innej strategii czystej.
+	Zatem jest to profil gry, w którym istnieje strategia czysta dająca nie gorsze wyniki od dowolnej innej strategii czystej.
 	Okazuje się jednak, że taki stan nie zawsze istnieje w strategiach czystych, np. w grze kamień papier nożyce strategia grania tylko kamienia daje gorsze rezultat przeciwko graniu tylko papieru. Podobnie ze strategią grania tylko nożyc i grania tylko papieru.
 	\subsection{Strategie mieszane}
 	\begin{definition}[Strategia mieszana]
@@ -303,7 +306,7 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 	\end{definition}
 
 	\section{Twierdzenia}
-	Algorytmy wykorzystywane w poniższej pracy oparte są o dwa twierdzenia a dokładniej o szczególne przypadki wynikające z nierówności \ref{Hoffding ineq} i \ref{Bernsteina emp ineq}:
+	Algorytmy \ref{alg:LEBR}, \ref{alg:LEBR 1}, \ref{alg:LEBR 2}, \ref{alg:IEBLR* 1}, \ref{alg:IEBLR* 2} wykorzystywane w poniższej pracy oparte są o dwa twierdzenia a dokładniej o szczególne przypadki wynikające z nierówności \ref{Hoffding ineq} i \ref{Bernsteina emp ineq}:
 	\begin{theorem}[Nierówność Hoffdinga]
 		\label{Hoffding ineq}
 		Niech $X_1,X_2,\dots,X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $a_i \le X_i \le b_i$, wtedy:
@@ -340,7 +343,7 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 	\end{lemma}
 
 	\section{Problem porównań wielokrotnych}
-	Załóżmy, że z prawdopodobieństwem $1-\delta$ chcemy wiedzieć który z 2 graczy, $p_1$ i $p_2$ jest lepszy. W tym
+	Załóżmy, że z prawdopodobieństwem $1-\delta$ chcemy wiedzieć który z dwóch graczy, $p_1$ i $p_2$ jest lepszy. W tym
 	celu będziemy przeprowadzać testy statystyczne, dla których
 	prawdopodobieństwo pomyłki k-tego testu wynosi $\delta_k$, aż do momentu, gdy jeden z graczy wygra przeważającą ilość razy. Wtedy po przeprowadzeniu $n$ takich testów
 	\begin{gather*}
@@ -351,7 +354,7 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 	Oznacza to, że musimy wprowadzić pewną korektę, aby
 	ostateczne prawdopodobieństwo popełnienia błędu było
 	mniejsze niż $\delta$.
-	Możemy wprowadzić jedna z dwóch poprawek:
+	Możemy zastosować jedna z dwóch poprawek:
 
 	\begin{enumerate}[label=\thesection.\arabic*]
 		\item \label{korekta 1} Niech $n$ będzie maksymalną liczbą testów jaką pozwalamy wykonać, aby wyznaczyć lepszego
@@ -365,7 +368,7 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 	\section{Algorytmy wyścigowe}
 	Jednymi z algorytmów stosującymi dane korekty są algorytmy wyścigowe
 	(Racing \\Algorytms). Dwoma najpopularniejszymi typami algorytmów racingowych są "Hoffding race" oraz "Bernstein race".
-	Oparte są one odpowiednio o Twierdzenie \ref{Hoffding ineq} i Twierdzenie \ref{Bernsteina emp ineq lemma} oraz korektę \ref{korekta 2} . Mają one jednak pewną wadę, mogą zajmować one dużą ilość czasu, a w momencie, gdy poziom umiejętności porównywanych graczy jest sobie równy (prawdopodobieństwo wygranej wynosi 50\%), wtedy z prawdopodobieństwem równym $1-\delta$ algorytm się nigdy nie zatrzyma.
+	Oparte są one odpowiednio o Twierdzenie \ref{Hoffding ineq} i Twierdzenie \ref{Bernsteina emp ineq lemma} oraz korektę \ref{korekta 2} . Mają one jednak pewną wadę, mogą trwać one dużą ilość czasu, a w momencie, gdy poziom umiejętności porównywanych graczy jest sobie równy (prawdopodobieństwo wygranej wynosi 50\%), wtedy z prawdopodobieństwem równym $1-\delta$ algorytm się nigdy nie zatrzyma.
 	
 	W celu poradzenia sobie z problemami, jakie wiążą się z klasycznymi algorytmami wyścigowymi, wprowadzimy  tzw. Limited Racing algorytm. Załóżmy zatem dodatkowy warunek, który mówi, że przerywamy działanie algorytmu w momencie, gdy empiryczna wartość oczekiwana z prawdopodobieństwem większym bądź równym $1-\delta$ jest znana z dokładnością co do zadanego $\epsilon$. W poniższej pracy będziemy przyjmować $\epsilon=0.01$ oraz $\delta = 0.05$.
 	\subsection{Limited empirical Bernstein race algorithm (LEBR)}
