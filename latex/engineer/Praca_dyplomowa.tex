@@ -140,6 +140,10 @@
 
 \DeclareRobustCommand{\bbone}{\text{\usefont{U}{bbold}{m}{n}1}}
 \DeclareMathOperator{\EX}{\mathbb{E}}% expected value
+\DeclareCaptionLabelFormat{custom2}
+{%
+	#1 \thealgorithm:
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -175,7 +179,7 @@ Wielka Brytania & 2 629 188 & 4,60\%  \\ [1ex]
 \label{tab:przykladowa} 
 \end{table}
 
-Do cytowania używamy komendy \texttt{cite}. W nawiasie klamrowym podajemy klucz, którego użyliśmy w pliku \emph{bibliografia.bib}. Przykład: \cite{einstein} lub \cite[chap. 2]{latexcompanion}.
+%Do cytowania używamy komendy \texttt{cite}. W nawiasie klamrowym podajemy klucz, którego użyliśmy w pliku \emph{bibliografia.bib}. Przykład: \cite{einstein} lub \cite[chap. 2]{latexcompanion}.
 
 \section{Podrozdział pierwszy}
 
@@ -243,7 +247,7 @@ Natomiast przykładami gier częściowo obserwowanymi są wszelkie gry posiadaj�
 Istnieje jeszcze wiele innych podziałów gier ze wglądu na kategorie takie jak liczba graczy, ze względu na zbiory dostępnych akcji, ze względu na możliwość tworzenia koalicji i wiele innych.
 
 \section{Definicje i Oznaczenia}
-Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować czym strategia optymalna.
+Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować czym jest strategia optymalna.
 \subsection{Strategie proste}
 \begin{itemize}
 	\item $ N = \{1,2,\dots, n\} $ -- zbiór graczy,
@@ -312,9 +316,9 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 		\label{Hoffding ineq lemma}
 		Niech $X_1,X_2,\dots,X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $0 \le X_i \le 1$, wtedy:
 		\begin{gather*}
-			\overline{S}_t = \frac{S_t}{t},\quad 
-			\mu = \EX(\overline{S}_t),\quad  	
-			P(|\overline{S}_t - \mu | \le \epsilon ) = 1 - \delta, \\
+			\overline{X}_t = \frac{S_t}{t},\quad 
+			\mu = \EX(X_i),\quad  	
+			P(|\overline{X}_t - \mu | \le \epsilon ) = 1 - \delta, \\
 			\epsilon \le  \sqrt{\frac{\ln(2/\delta)}{2t}}   
 		\end{gather*}
 	\end{lemma}
@@ -323,17 +327,18 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 		\label{Bernsteina emp ineq}
 		Niech $X_1,X_2,\dots,X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $a \le X_i \le b$, wtedy:
 		\begin{gather*}
-			P(|S_n - \EX(E_n)| \ge \epsilon ) = \delta, \quad \overline \sigma_t^2 = \frac{1}{t}\sum_{i=i}^{t}(S_i - \overline{S}_t)^2, \\
-			|S_t - \EX(E_t)| \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta)}{t}} + \frac{3 R \ln{(3 / \delta)}}{t}
+			P(|\overline{X}_t - \mu| \ge \epsilon ) \le  \delta, \quad \overline \sigma_t^2 = \frac{1}{t}\sum_{i=i}^{t}(X_i - \overline{X}_t)^2, \\
+			|\overline{X}_t - \mu | \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta)}{t}} + \frac{3 R \ln{(3 / \delta)}}{t}
 		\end{gather*}
 	\end{theorem}
 	\begin{lemma}\label{Bernsteina emp ineq lemma}
 		Niech $X_1,X_2,\dots,X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $0 \le X_i \le 1$, wtedy:
 		\begin{gather*}
-			P(|\overline{S}_t - \mu | \le \epsilon ) = 1 - \delta,\\
+			P(|\overline{X}_t - \mu | \le \epsilon ) = 1 - \delta,\\
 			\epsilon \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta)}{t}} + \frac{3  \ln{(3 / \delta)}}{t}
 		\end{gather*}
 	\end{lemma}
+
 	\section{Problem porównań wielokrotnych}
 	Załóżmy, że z prawdopodobieństwem $1-\delta$ chcemy wiedzieć który z 2 graczy, $p_1$ i $p_2$ jest lepszy. W tym
 	celu będziemy przeprowadzać testy statystyczne, dla których
@@ -359,37 +364,228 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 
 	\section{Algorytmy wyścigowe}
 	Jednymi z algorytmów stosującymi dane korekty są algorytmy wyścigowe
-	(Racing \\Algorytms). Dwoma najpopularniejszymi typami algorytmów racingowych są "Hoeﬀding race" oraz "Bernstein race".
-	Oparte są one odpowiednio o Twierdzenie \ref{Hoffding ineq} i Twierdzenie \ref{Bernsteina emp ineq lemma}. Mają one jednak pewną wadę, mogą zajmować one dużą ilość czasu, a w momencie, gdy poziom umiejętności porównywanych graczy jest sobie równy (prawdopodobieństwo wygranej wynosi 50\%), wtedy z prawdopodobieństwem równym $1-\delta$ algorytm się nigdy nie zatrzyma.
+	(Racing \\Algorytms). Dwoma najpopularniejszymi typami algorytmów racingowych są "Hoffding race" oraz "Bernstein race".
+	Oparte są one odpowiednio o Twierdzenie \ref{Hoffding ineq} i Twierdzenie \ref{Bernsteina emp ineq lemma} oraz korektę \ref{korekta 2} . Mają one jednak pewną wadę, mogą zajmować one dużą ilość czasu, a w momencie, gdy poziom umiejętności porównywanych graczy jest sobie równy (prawdopodobieństwo wygranej wynosi 50\%), wtedy z prawdopodobieństwem równym $1-\delta$ algorytm się nigdy nie zatrzyma.
 	
-	W celu poradzenia sobie z problemami, jakie wiążą się z klasycznymi algorytmami wyścigowymi, wprowadzimy  tzw. Limited Racing algorytm. Załóżmy zatem dodatkowy warunek, który mówi, że przerywamy działanie algorytmu w momencie, gdy empiryczna wartość oczekiwana z prawdopodobieństwem większym bądź równym $1-\delta$ jest znana z dokładnością co do zadanego $\epsilon$.
+	W celu poradzenia sobie z problemami, jakie wiążą się z klasycznymi algorytmami wyścigowymi, wprowadzimy  tzw. Limited Racing algorytm. Załóżmy zatem dodatkowy warunek, który mówi, że przerywamy działanie algorytmu w momencie, gdy empiryczna wartość oczekiwana z prawdopodobieństwem większym bądź równym $1-\delta$ jest znana z dokładnością co do zadanego $\epsilon$. W poniższej pracy będziemy przyjmować $\epsilon=0.01$ oraz $\delta = 0.05$.
+	\subsection{Limited empirical Bernstein race algorithm (LEBR)}
+	Klasyczny algorytm racingowy opiera się na szeregu $\epsilon_t$ który posiada właściwość że zdarzenie $\mathcal{E}= \{|\overline{X}_t - \mu | \le \epsilon_t,\; t\in \mathbb{N}^+\}$ występuje z prawdopodobieństwem nie mniejszym 
+	\\niż $1-\delta$. Niech $\delta_k$ będzie dodatnim szeregiem spełniającym $ \delta \ge \displaystyle\sum_{k = 1}^{\infty}\delta_k$ wtedy korzystając z Lematu \ref{Bernsteina emp ineq lemma}
+	\begin{gather*}
+		\label{eq:LEBR epsilon}
+		\epsilon_t =  \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta_t)}{t}} + \frac{3  \ln{(3 / \delta_t)}}{t}
+	\end{gather*}
+	Ponieważ $\delta_k$ sumuje się co najmniej do $\delta$ oraz $(\overline{X}_t - \epsilon_t, \overline{X}_t + \epsilon_t)$ jest przedziałem ufności dla $\mu$ o współczynniku ufności $1-\delta_t$ 
+	otrzymanym z Lematu \ref{Bernsteina emp ineq lemma}, uzyskujemy że zdarzenie $\mathcal{E}$ występuję z prawdopodobieństw nie mniejszym niż $1-\delta$. Identyczny rezultat otrzymujemy stosując $\epsilon_t$ oparte o Lemat \ref{Hoffding ineq lemma} jednak zmienia się wtedy postać $\epsilon_t$. W pracy \cite{cauwet2018surprising} algorytm opierał się o szereg $\delta_t=\frac{c\delta_t}{t^2},\; c=\frac{6}{\pi^2}$.
+	Pseudo kod jest pokazany jako Algorytm \ref{alg:LEBR} omówmy zarys metody. Rozgrywamy $t$ gier, i wyznaczamy granice górna $\text{UB} = \displaystyle\min_{1\le k\le t}( \overline{X}_k+c_k)$  oraz granice dolną $\text{LB} = \max(0,\displaystyle\max_{1\le k\le t}(\overline{X}_k-c_k))$. Algorytm kończy się w momencie gdy $\text{UB}-\text{LB}< 2\epsilon$. Otrzymane w ten sposób $\overline{X}$ z prawdopodobieństwem nie mniejszym niż $1 - \delta$ wynosi $\mu$ z dokładnością co zadanego $\epsilon$. 
+	\begin{algorithm}[H]
+		\caption{LEBR}\label{alg:LEBR}
+		\begin{algorithmic}
+			\Ensure precision $\epsilon$, probabilitys $\delta_k$
+			\State $LB \gets 0, \quad UB \gets \infty, \quad t \gets 0,\quad n \gets 1$ 
+			\While{$ UB - LB > 2\epsilon $} 
+			\State $t \gets t + 1$
+			\State Obtain $X_t$				
+			\State $\epsilon_n \gets \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{n}} + \frac{3  \ln{(3 / \delta_n)}}{n}$ 
+			\State $LB \gets \max(LB,  \overline{X_n} - \epsilon_n)$
+			\State $UB \gets \min(BU,  \overline{X_n} + \epsilon_n)$
+			\State $n \gets n + 1$
+			\EndWhile
+			\State \Return $ \overline{X_t}$		
+		\end{algorithmic}
+	\end{algorithm}
+
+	\subsection{Improved LEBR (ILEBR)}
+	Algorytm \ref{alg:LEBR} opiera się na korekcie \ref{korekta 2} która zakłada możliwie nieskończoną ilość testów. Jednak dołożenie ograniczenia na temat żądanej dokładności rzędu $\epsilon$ pozwala nam znaleźć maksymalną ilość testów jaką należy wykonać aby z prawdopodobieństwem nie mniejszym niż $1-\delta$ empiryczna wartość oczekiwana była równa teoretycznej wartości oczekiwanej z dokładnością co do $\epsilon$. Niech $\delta_k = \frac{\delta}{n_{max}}$ gdzie $n_{max}$ oznacza maksymalną potrzebną ilość testów. Z Lematu \ref{Hoffding ineq lemma} niezależnie od odchylenia standardowego zmiennej losowej $X_i$ jesteśmy w stanie oszacować $n_{max}$ rozwiązując analitycznie poniższe równie \ref{eq:ILEBR Hoffdin}
+	\begin{gather}
+		\label{eq:ILEBR Hoffdin}
+		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2n_{max}}} 
+	\end{gather}
+
+	Dla $\epsilon=0.01$ i $\delta=0.05$ rozwiązaniem numerycznym równania \ref{eq:ILEBR Hoffdin} jest $n_{max}=74539.85$.
+	Oznacza to że maksymalna ilość gier jaką  należy rozegrać między dwoma graczami aby z prawdopodobieństwem nie mniejszym niż $1-0.05$ oszacować prawdopodobieństwo wygrania gry przez pierwszego gracza z dokładniejsi co do $0.01$ wynosi $\lceil n_{max} \rceil = 74540$. 
+	   
+	Podobnie możemy postąpić w przypadku nierówności Bernsteina.
+	Na początku jednak musimy oszacować z góry $\overline{\sigma}_t$.
+	Przyjmijmy, że $X_i$ jest zmienną z rozkładu zero-jedynkowego.
+	Wtedy maksymalna możliwa wariancja dla takiej zmiennej losowej wynosi $\sigma^2 = 0.5$. Jest to również maksymalna możliwa wartość dla naszej empirycznej wariancji. Podstawiając wtedy $\delta_n = \frac{0.05}{n}, \epsilon = 0.01$ do Lematu \ref{Bernsteina emp ineq lemma} otrzymujemy:
+	\begin{gather}
+		\label{eq:ILEBR Bernstein}
+		0.01 \le \sqrt{\frac{\ln(\frac{3n_{max}}{0.05})}{n_{max}}} + \frac{3  \ln(\frac{3n_{max}}{0.05})}{n_{max}} 
+	\end{gather}
+	Rozwiązaniem numerycznym równania \ref{eq:ILEBR Bernstein} jest $n_{max}=170986$. Jednak granice oparte o nierówność Bernsteina zalezą od wariancji. Sprawdźmy zatem jak wygląda $n_{max}$ w zalotności od $\sigma^2$.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{imagens/t_eq_n.png}
+		\captionsetup{justification=centering}
+		\caption{Wykres maksymalnej potrzebnej ilości testów w zależności od wariancji zmiennych losowych  $X_i$ w przypadku gdy liczba testów jest równa liczbie gier ($t = n$) dla $\epsilon=0.01$ i $\delta = 0.05$.}
+		\label{fig:t_eq_n}
+	\end{figure}
+	Z Rysunku \ref{fig:t_eq_n} widzimy zatem, że algorytm oparty o nierówność Bernsteina radzi sobie lepiej w przypadku gdy niskiej wariancji. Co więcej niezależnie od ilości wykonywanych testów, dla $\delta_n = \frac{0.05}{74540}$ maksymalna ilość gier po której z prawdopodobieństwem $1-0.05$ wiemy że $|\overline{X_i} - \mu| \le 0.01$ wynosi $74540$. Oznacza to że do Algorytmu \ref{alg:LEBR} możemy zastosować funkcje $\epsilon_k$ opartą o $\delta_k = \frac{\delta}{n_{max}}$ oraz dołożyć nowy warunek zatrzymania algorytmu gdy ilość wykonanych testów przekroczy $n_{max}$. Dotychczas uwzględnione poprawki przedstawione sa przy Algorytmu \ref{alg:LEBR 1}.
+	\begin{algorithm}[H]
+		\caption{ILEBR 1}\label{alg:LEBR 1}
+		\begin{algorithmic}
+			\Ensure precision $\epsilon$, probability $\delta$
+			\State $LB \gets 0, \quad UB \gets \infty, \quad t \gets 0,\quad n \gets 1$
+			\State Find $n_{max}$ such as $		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2n_{max}}} $
+			\Statex $\delta_n = \delta/n_{max}$
+			\While{$ UB - LB > 2\epsilon $ or $n<n_{max}+1$}  
+			\State $t \gets t + 1$
+			\State Obtain $X_t$
+			\State $\epsilon_n \gets \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{n}} + \frac{3  \ln{(3 / \delta_n)}}{n}$ 
+			\State $LB \gets \max(LB,  \overline{X_n} - \epsilon_n)$
+			\State $UB \gets \min(BU,  \overline{X_n} + \epsilon_n)$
+			\State $n \gets n + 1$
+			\EndWhile
+			\State \Return $ \overline{X_t}$		
+		\end{algorithmic}
+	\end{algorithm}
+	Algorytmy \ref{alg:LEBR} i \ref{alg:LEBR 1} przeprowadzały testy po każdej rozegranej grzęz, skutkuje to wytopieniem bardzkiej ilości testów. Zamiast przeprowadzać test po każdej rozegranej grze, niech test odbywa się w momencie gdy liczba rozegranych gier będzie równa pewnej funkcji zależnej od ilości przeprowadzonych testów. Na podstawie artykuł \cite{heidrich2011non} wiemy że funkcja która pozwoli nam na polepszenie wyników jest $t = n^2$. Przeprowadźmy identyczną procedure jak w przypadku równań \ref{eq:ILEBR Hoffdin} i \ref{eq:ILEBR Bernstein}. Tym razem jednak zamiast stosować $t = n$ do Lematów \ref{Hoffding ineq lemma} i \ref{Bernsteina emp ineq lemma}  zastosujmy $t = n^2$.
+	
+	W przypadku granicy opartej o nierówność Hoffdina otrzymujemy
+	\begin{gather}
+		\label{eq:ILEBR Hoffdin t=n^2}
+		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2n_{max}^2}} \implies t_{max} = \lceil n_{max} \rceil^2 = \lceil213\rceil^2= 45369.
+	\end{gather}
+	W przypadku granicy opartej o nierówność Bernsteina otrzymujemy
+	\begin{gather}
+		\label{eq:ILEBR Bernstein t=n^2}
+		0.01 \le \sqrt{\frac{\ln(\frac{3n_{max}}{0.05})}{n_{max}^2}} + \frac{3  \ln(\frac{3n_{max}}{0.05})}{n_{max}}^2\implies t_{max} = \lceil n_{max} \rceil^2 = \lceil324^2\rceil= 104976. 
+	\end{gather}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{imagens/t_eq_n_q.png}
+		\captionsetup{justification=centering}
+		\caption{Wykres maksymalnej potrzebnej ilości testów w zależności od wariancji zmiennych losowych  $X_i$ w przypadku gdy liczba rozegranych gier jest równa liczbie przeprowadzonych testów do kwadratu ($t = n^2$) dla $\epsilon=0.01$ i $\delta = 0.05$.}
+		\label{fig:t_eq_n_q}
+	\end{figure}
+	Porównując ze sobą uzyskane wartość z wzoru \ref{eq:ILEBR Hoffdin} oraz \ref{eq:ILEBR Hoffdin t=n^2} widzimy że udało się zmniejszyć maksymalną ilość gier jakie należny wykonać z 74540 do 45369.
+	Wprowadźmy zatem nowo uzyskane poprawki trwożąc Algorytm \ref{alg:LEBR 2}.
+	\begin{algorithm}[H]
+		\caption{ILEBR 2}\label{alg:LEBR 2}
+		\begin{algorithmic}
+			\Ensure precision $\epsilon$, probability $\delta$
+			\State $LB \gets 0, \quad UB \gets \infty, \quad t \gets 0,\quad n \gets 1$
+			\State Find $n_{max}$ such as $		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2n_{max}^2}} $
+			\Statex $\delta_n = \delta/n_{max}$
+			\While{$ UB - LB > 2\epsilon $ or $n<n_{max}+1$}  
+			\Repeat 
+			\State $t \gets t + 1$
+			\State Obtain $X_t$
+			\Until $t=n^2$
+			\State $\epsilon_n \gets \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{n^2}} + \frac{3  \ln{(3 / \delta_n)}}{n^2}$ 
+			\State $LB \gets \max(LB,  \overline{X_n} - \epsilon_n)$
+			\State $UB \gets \min(BU,  \overline{X_n} + \epsilon_n)$
+			\State $n \gets n + 1$
+			\EndWhile
+			\State \Return $ \overline{X_t}$		
+		\end{algorithmic}
+	\end{algorithm}
+	Do tej pory Wszystkie stosowane algorytmy wyznaczały nam prawdopodobieństwo wygranej pierwszego gracza. Jednak nam nie zależny na tym dokładnie znać prawdopodobieństwo wygranej graczy. Głównym celem algorytmów jest odnalezienie lepszego gracza. Pozwala nam to modyfikacje Algorytmu \ref{alg:LEBR 2} o nowe warunki zatrzymania.
+	\begin{algorithm}[H]\captionsetup{labelformat=custom2}
+		\caption{ILEBR* 1}\label{alg:IEBLR* 1}
+		\begin{algorithmic}
+			\Ensure precision $\epsilon$, probability $\delta$ 
+			\State  $ LB \gets 0,\quad UB \gets \infty,\quad t \gets 1,\quad n \gets 0 $
+			\State Find $n_{max}$ such as $		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2n_{max}^2}} $
+			\Statex $\delta_n = \delta/n_{max}$
+			\While{$( UB - LB > 2\epsilon $ or $n < n_{max}+1)$ and $ (BU > 0.5 \text{ or } LB < 0.5)$}
+			\Repeat 
+			\State $t \gets t + 1$
+			\State Obtain $X_t$
+			\Until $t=n^2$
+			\State $\epsilon_n \gets \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{n^2}} + \frac{3  \ln{(3 / \delta_n)}}{n^2}$ 
+			\State $LB \gets \max(LB,  \overline{X_n} - \epsilon_n)$
+			\State $UB \gets \min(BU,  \overline{X_n} + \epsilon_n)$
+			\State $n \gets n + 1$
+			\EndWhile
+			\If{$LB > 0.5$}
+			\State \Return $p_1$ win
+			\ElsIf{$UB < 0.5$}
+			\State \Return $p_2$ win
+			\ElsIf{$\overline{X_n} > 0.5$}
+			\State \Return $p_1$ win
+			\Else
+			\State \Return $p_2$ win
+			\EndIf
+		\end{algorithmic}
+	\end{algorithm}
+	Do tej pory staraliśmy się ograniczyć z góry maksymalną ilość rozgrywanych gier. Jednak oczywistym faktem jest że nie ma sensu testowania który z graczy jest lepszy w monecie gdy ilość rozegranych gier jest niewystarczająco mały. Jadnak jak wyznaczyć nasze minimalne $t$ po którym zaczniemy testować? Algorytm oparte o nierówność Bernsteina najszybciej wyznaczają wynik w przypadku gdy wariancja naszej zmiennej losowej wynosi 0 (jeden z graczy zawsze wygrywa). Dla Algorytmu \ref{alg:IEBLR*} interesuje nas monet od którego będziemy w stanie rozróżnić kiedy dolna bać górna granica przekroczy $\frac{1}{2}$. Zatem oszacujmy $n_{min}$ korzystać z Lematu \ref{Bernsteina emp ineq lemma} dla $\overline{\sigma}_t=0$ i $t = n^2$.  
+	
+	
+	
+	\begin{gather*}
+		\label{eq:ILEBR Bernstein t=n^2}
+		0.5 \le \frac{3  \ln(\frac{3n_{min}}{0.05})}{n_{min}^2}\implies t_{min} = \lceil n_{min}^2 \rceil = \lceil5.93749\rceil^2= 36. 
+	\end{gather*}
+	Oznacza to, że przy $\epsilon=0.01$ i $\delta= 0.05$ w przypadku gdy jeden graczy wygrywa zawsze, będziemy w stanie to stwierdzić nie prędzej niż po 36 grach.
+	Na tej podstawie wyznaczy nowe $n_{max}$ uwzględniając pomijanie pierwsze niepotrzebne testy.
+	\begin{gather}
+		\label{eq:ILEBR Hoffdin t=n^2 and t_min}
+		0.01 =  \sqrt{\frac{\ln(2n_{max}/0.05)}{2(n+6)_{max}^2}} \implies t_{max} = \lceil (n_{max}+6)\rceil^2 = \lceil(207+6)^2\rceil= 45369.
+	\end{gather}
+	Chociaż równanie \ref{eq:ILEBR Hoffdin t=n^2 and t_min} nie zmniejszyło nam maksymalnej liczby testów jakie należy wykonać to pozwoliło nam ono na zmniejszenie $\epsilon_n$. Oznacza to że stosują odroczenie pierwszych testów, pozwala nam na dokładniejsze oszacowanie naszej górnej i dolnej granicy w stosowanych algorytmach.
+	\begin{algorithm}[H]\captionsetup{labelformat=custom2}
+		\caption{ILEBR* 2}\label{alg:IEBLR* 2}
+		\begin{algorithmic}
+			\Ensure precision $\epsilon$, probability $\delta$ 
+			\State  $ LB \gets 0,\quad UB \gets \infty,\quad t \gets 1,\quad n \gets 0 $
+			\State Find $n_{max}$ such as $		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2(n+6)_{max}^2}} $
+			\Statex $\delta_n = \delta/n_{max}$
+			\While{$( UB - LB > 2\epsilon $ or $n < n_{max}+1)$ and $ (BU > 0.5 \text{ or } LB < 0.5)$}
+			\Repeat 
+			\State $t \gets t + 1$
+			\State Obtain $X_t$
+			\Until $t=n^2$
+			\State $\epsilon_n \gets \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{(n+6)^2}} + \frac{3  \ln{(3 / \delta_n)}}{(n+6)^2}$ 
+			\State $LB \gets \max(LB,  \overline{X_n} - \epsilon_n)$
+			\State $UB \gets \min(BU,  \overline{X_n} + \epsilon_n)$
+			\State $n \gets n + 1$
+			\EndWhile
+			\If{$LB > 0.5$}
+			\State \Return $p_1$ win
+			\ElsIf{$UB < 0.5$}
+			\State \Return $p_2$ win
+			\ElsIf{$\overline{X_n} > 0.5$}
+			\State \Return $p_1$ win
+			\Else
+			\State \Return $p_2$ win
+			\EndIf
+		\end{algorithmic}
+	\end{algorithm}
+	\newpage
 	\subsection{Bernstein race without maximum race length}
-	Wykorzystując Lemat~\ref{Bernsteina emp ineq lemma} oraz korektę \ref{korekta 2} z $\delta_k=\frac{c\delta}{k^2}, c=\frac{6}{\pi^2}$ otrzymujemy, że dla ciągu $X_1,X_2,\dots,X_t$ i.i.d. takim, że  $0 \le X_i \le 1$:
+	Wykorzystując Lemat~\ref{Bernsteina emp ineq lemma} oraz korektę \ref{korekta 2} z $\delta_k=\frac{c\delta}{k^2}, c=\frac{6}{\pi^2}$ otrzymujemy, że dla ciągu $X_1,X_2,\dots,X_t$ i.i.d. zmiennych losowych takim, że  $0 \le X_i \le 1$ 
 	\begin{align*}
 		\label{Bernstein race without maximum race length}
 		\epsilon_{t,k} \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta_k)}{t}} + \frac{3  \ln{(3 / \delta_k)}}{t} =
 		\overline{\sigma}_t\sqrt{\frac{2\ln(\frac{k^2\pi^2}{2\delta})}{t}} + \frac{3  \ln{(\frac{k^2\pi^2}{2\delta})}}{t}
 	\end{align*}
 	Wtedy $e_{t,k}$ interpretujemy jako maksymalną różnicę między empiryczną a teoretyczną wartością oczekiwaną po przeprowadzeniu $k$ testów i rozegraniu $t$ gier, z prawdopodobieństwem pomyłki równym 
-	\begin{fact}
-		\label{Fakt Bernstein race without maximum race length}
-		Przeprowadzać testy po każdej rozegranej grze ($k=t$)  $\lim\limits_{t\to\infty} e_{t,k} = 0$ 
-	\end{fact}
-
-	\begin{proof}[Dowód Faktu \ref{Fakt Bernstein race without maximum race length}]
+	\begin{lemma}
+		\label{lemma Bernstein race without maximum race length}
+		Niech liczba rozegranych gier będzie funkcja zależną od k ($f(k) = t$) oraz niech $\delta_k = \frac{\delta}{g(k)}$
+		gdzie $\delta \ge \displaystyle\sum_{k=1}^{\infty} \frac{\delta}{g(k)}$ i $ln(g(k)) \in o(f(k))$. Wtedy
+		$\lim\limits_{k\to\infty} e_{f(k),k} = 0$ 
+	\end{lemma}
+	\begin{proof}[Dowód Faktu \ref{lemma Bernstein race without maximum race length}]
 		\begin{gather*}
-		0\le X_i \le 1 \implies \overline{\sigma}_t^2 \le \frac{1}{2}\\
-		\epsilon_{t,t} =\epsilon_t \le  \sqrt{\frac{\ln(\frac{t^2\pi^2}{2\delta})}{t}} + \frac{3  \ln{(\frac{t^2\pi^2}{2\delta})}}{t} \le \frac{4  \ln{(\frac{t^2\pi^2}{2\delta})}}{t}\\
-		\forall_{a>0} \lim\limits_{t\to\infty} \frac{\ln(at^2)}{t} \overset{\left[\frac{\infty}{\infty}\right]}{=}\lim\limits_{t\to\infty} \frac{2}{t}=0 \implies
-		\lim\limits_{t\to\infty} e_t \le 0 
+			0\le X_i \le 1 \implies \overline{\sigma}_t^2 \le \frac{1}{2}\\
+			\epsilon_{f(k), k} \le  \sqrt{\frac{\ln(\frac{3g(k)}{\delta})}{f(k)}} + \frac{3  \ln{(\frac{3g(k)}{\delta})}}{f(k)}
 		\end{gather*}
-	Zatem $0\le \lim\limits_{t\to\infty} e_t \le 0 \implies \lim\limits_{t\to\infty} e_t = 0$
+		Z założeń wiemy ze $ln(g(k)) \in o(f(k))$, zatem
+		\begin{gather*}
+			\lim\limits_{k\to\infty} \frac{  \ln{(\frac{3f(k)}{\delta})}}{f(k)} = 0
+		\end{gather*}
+		Co ostatecznie z tw. o trzech ciągach daje nam
+		\begin{gather*}
+			0\le \lim\limits_{k\to\infty} e_{f(k), k} \le 0 \implies \lim\limits_{t\to\infty} e_{f(k), k} = 0
+		\end{gather*}
 	\end{proof}
+	Lemat \ref{lemma Bernstein race without maximum race length} pozwala nam na to aby ograniczyć ilość przeprowadzanych testów. Ponieważ podejście oparte o testowane który z graczy jest lepszy po każdej rozegranej grze prowadzi do nadmiarowej ilości wykonywanych testów.
+	Przykładem funkcjami jakimi użyć do Lematu \ref{lemma Bernstein race without maximum race length} są $f(k) = k^2,\; g(k) = \frac{6/\pi^2}{k^2}$. Teaki dobór funkcji oznacza ze $k$-ty test odbywa się gdy liczba przeprowadzonych gier wynosi $k^2$.
 	
-	
-	
-	
-	
+
 	
 	
 {\backmatter \chapter{Podsumowanie}}
@@ -417,5 +613,6 @@ Dodatek w pracach matematycznych również nie jest wymagany. Można w nim przed
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 % w nawiasie klamrowym wpisujemy nazwę pliku z bibliografią w formacie .bib
-
+\bibliographystyle{bibliografia_styl}
+\bibliography{bibliografia}
 \end{document}
