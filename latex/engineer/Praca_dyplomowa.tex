@@ -433,7 +433,7 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 			\State $LB \gets 0, \quad UB \gets \infty, \quad t \gets 0,\quad n \gets 1$
 			\State Find $n_{max}$ such as $		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2n_{max}}} $
 			\Statex $\delta_n = \delta/n_{max}$
-			\While{$ UB - LB > 2\epsilon $ or $n<n_{max}+1$}  
+			\While{$ UB - LB > 2\epsilon $ or $n\le n_{max}$}  
 			\State $t \gets t + 1$
 			\State Obtain $X_t$
 			\State $\epsilon_n \gets \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{n}} + \frac{3  \ln{(3 / \delta_n)}}{n}$ 
@@ -520,28 +520,31 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 	
 	\begin{gather*}
 		\label{eq:ILEBR Bernstein t=n^2}
-		0.5 \le \frac{3  \ln(\frac{3n_{min}}{0.05})}{n_{min}}\implies^2 t_{min} = \lceil n_{min} \rceil^2 = \lceil5.93749\rceil^2= 36. 
+		0.5 \le \frac{3  \ln(\frac{3n_{max}}{0.05})}{n_{min^2}}\implies t_{min} = \lceil n_{min} \rceil^2 = \lceil7.53219\rceil^2= 64. 
 	\end{gather*}
-	Oznacza to, że przy $\epsilon=0.01$ i $\delta= 0.05$ w przypadku gdy jeden graczy wygrywa zawsze, będziemy w stanie to stwierdzić nie prędzej niż po 36 grach.
+	Oznacza to, że przy $\epsilon=0.01$ i $\delta= 0.05$ w przypadku gdy jeden graczy wygrywa zawsze, będziemy w stanie to stwierdzić nie prędzej niż po 64 grach.
 	Na tej podstawie wyznaczy nowe $n_{max}$ uwzględniając pomijanie pierwsze niepotrzebne testy.
 	\begin{gather}
 		\label{eq:ILEBR Hoffdin t=n^2 and t_min}
-		0.01 =  \sqrt{\frac{\ln(2n_{max}/0.05)}{2(n+6)_{max}^2}} \implies t_{max} = \lceil n_{max}+6\rceil^2 = \left\lceil 207+6\right\rceil^2= 45369.
+		0.01 =  \sqrt{\frac{\ln(2n_{max}/0.05)}{2(n_{max}+7)^2}} \implies t_{max} = \lceil n_{max}+6\rceil^2 = \left\lceil 205.289+7\right\rceil^2= 45369.
 	\end{gather}
 	Chociaż równanie \ref{eq:ILEBR Hoffdin t=n^2 and t_min} nie zmniejszyło nam maksymalnej liczby testów jakie należy wykonać to pozwoliło nam ono na zmniejszenie $\epsilon_n$. Oznacza to że stosują odroczenie pierwszych testów, pozwala nam na dokładniejsze oszacowanie naszej górnej i dolnej granicy w stosowanych algorytmach.
 	\begin{algorithm}[H]\captionsetup{labelformat=custom2}
 		\caption{ILEBR* 2}\label{alg:IEBLR* 2}
 		\begin{algorithmic}
 			\Ensure precision $\epsilon$, probability $\delta$ 
-			\State  $ LB \gets 0,\quad UB \gets \infty,\quad t \gets 1,\quad n \gets 0 $
-			\State Find $n_{max}$ such as $		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2(n+6)_{max}^2}} $
+			\State  $ LB \gets 0,\quad UB \gets \infty, \quad n \gets 0 $
+			\State Find $n_{max}$ such as $		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2n_{max}^2}} $
+			\State Find $n_{min}$ such as $		0.5 =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2(n_{min}+1)^2}} $
+			\State Obtain first $X_1,X_2,X_{n_{min}}$ games 
+			\State $t \gets n_{min}^2$
 			\Statex $\delta_n = \delta/n_{max}$
-			\While{$( UB - LB > 2\epsilon $ or $n < n_{max}+1)$ and $ (BU > 0.5 \text{ or } LB < 0.5)$}
+			\While{$( UB - LB > 2\epsilon $ or $n \le n_{max})$ and $ (BU > 0.5 \text{ or } LB < 0.5)$}
 			\Repeat 
 			\State $t \gets t + 1$
 			\State Obtain $X_t$
 			\Until $t=n^2$
-			\State $\epsilon_n \gets \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{(n+6)^2}} + \frac{3  \ln{(3 / \delta_n)}}{(n+6)^2}$ 
+			\State $\epsilon_n \gets \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{(n+n_{min})^2}} + \frac{3  \ln{(3 / \delta_n)}}{(n+n_{min})^2}$ 
 			\State $LB \gets \max(LB,  \overline{X_n} - \epsilon_n)$
 			\State $UB \gets \min(BU,  \overline{X_n} + \epsilon_n)$
 			\State $n \gets n + 1$
