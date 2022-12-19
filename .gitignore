@@ -22,7 +22,9 @@ tekst
 *.toc
 
 #cython
-**/cython_files/**/build
-**/cython_files/**/*.c
-**/cython_files/**/*.pyd
-**/cython_files/**/*.so
+build
+*.c
+*.pyd
+*.so
+*.pyc
+*.0
