@@ -26,3 +26,4 @@ tekst
 **/cython_files/**/*.c
 **/cython_files/**/*.pyd
 **/cython_files/**/*.so
+**/cython_files/**/*.pyc
