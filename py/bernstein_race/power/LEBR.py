@@ -6,14 +6,14 @@ sys.path.append('..')
 from cython_files.LEBR.LEBR import LEBR_test
 
 s = time()
-if __name__=="__main__":
+if __name__ == "__main__":
     with WorkerPool(n_jobs=8) as pool:
-        ps1 = np.arange(0.495, 0.5+0.0005, 0.0005)
-        x1_LEBR = np.array([pool.map(LEBR_test, [p]*2000) for p in ps1])
+        ps1 = np.arange(0.495, 0.5 + 0.0005, 0.0005)
+        x1_LEBR = np.array([pool.map(LEBR_test, [p] * 2000) for p in ps1])
         np.save("powers/LEBR_powr", x1_LEBR)
 
-        ps2 = np.arange(0, 0.5+0.05, 0.05)
-        x2_LEBR = np.array([pool.map(LEBR_test, [p]*200) for p in ps2])
+        ps2 = np.arange(0, 0.5 + 0.05, 0.05)
+        x2_LEBR = np.array([pool.map(LEBR_test, [p] * 200) for p in ps2])
         np.save("nr_of_games_to_play/LEBR_t", x2_LEBR)
 
         # ps1 = np.arange(0, 0.5, 0.1)

@@ -9,7 +9,7 @@ import collections
 import multiprocessing
 
 
-deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]*4  # deck of 52 cards
+deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] * 4  # deck of 52 cards
 deck_len = len(deck)
 number_to_card = {
     2: "2",
@@ -134,15 +134,15 @@ def symulation(parameters):
     random.shuffle(deck)
     player_1 = Player()
     player_2 = Player()
-    player_1.add_cards(deck[0:int(deck_len/2)])
-    player_2.add_cards(deck[int(deck_len/2):deck_len])
+    player_1.add_cards(deck[0:int(deck_len / 2)])
+    player_2.add_cards(deck[int(deck_len / 2):deck_len])
     winner = game(player_1, player_2, parameters)
     return winner
 
 
 if "__main__" == __name__:
     p = multiprocessing.Pool()
-    par = [parameters_0]*games_to_play
+    par = [parameters_0] * games_to_play
     results = p.map(symulation, par)
     results = collections.Counter(results)
     print(results)

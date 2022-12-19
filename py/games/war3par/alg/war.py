@@ -12,7 +12,7 @@ import collections
 from mpire import WorkerPool
 from collections import deque
 
-deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]*4  # deck of 52 cards
+deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] * 4  # deck of 52 cards
 deck_len = len(deck)
 number_to_card = {
     2: "2",
@@ -108,8 +108,8 @@ def symulation(parameters_1, parameters_2):
     random.shuffle(deck)
     player_1 = war3_player(parameters_1)
     player_2 = war3_player(parameters_2)
-    player_1.add_cards(deck[0:int(deck_len/2)])
-    player_2.add_cards(deck[int(deck_len/2):deck_len])
+    player_1.add_cards(deck[0:int(deck_len / 2)])
+    player_2.add_cards(deck[int(deck_len / 2):deck_len])
     while 1:
         try:
             battle_winner, cards = battle(player_1, player_2)
@@ -125,7 +125,7 @@ def symulation(parameters_1, parameters_2):
 
 
 if "__main__" == __name__:
-    par = [[parameters_0, parameters_0]]*10000
+    par = [[parameters_0, parameters_0]] * 10000
     with WorkerPool(n_jobs=4) as pool:
         results = pool.map(symulation, par)
         results = collections.Counter(results)

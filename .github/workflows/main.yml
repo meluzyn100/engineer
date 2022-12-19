@@ -36,11 +36,10 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements/dev.txt
       
-      - name: Correct Linter
-        run: |
-          autopep8 -i -r ./py
+      - name: Correct Linter 
+        run: | 
+          autopep8 -d -r ./py --ignore="E501, E402"  
 
-
-      - name: Analysing the code with pylint
+      - name: Analysing the code with pylint 
         run: |          # pylint $(git ls-files 'py/*.py')
-          pycodestyle py/
+          pycodestyle ./py --ignore="E501, E402"
