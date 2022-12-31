@@ -28,3 +28,6 @@ build
 *.so
 *.pyc
 *.0
+
+#old dir
+**/old
