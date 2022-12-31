@@ -752,7 +752,7 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 	Same zasady gry nie definiują jednak tego w jaki sposób karty na koniec naszego "magazynu" mogą zostać umieszczane.
 	
 	Wprowadźmy zatem 3 parametry nazwijmy je odpowiednio $A,\:B,\:C$, których będziemy używać do wyznaczania nieujemnych parametrów $\alpha = \exp(A),\: \
-	beta= \exp(B),\: \gamma= \exp(C)$. Wtedy, umieśćmy $k$ wygranych kart na końcu naszego "magazynu" niestepujący sposób:
+	\beta= \exp(B),\: \gamma= \exp(C)$. Wtedy, umieśćmy $k$ wygranych kart na końcu naszego "magazynu" niestepujący sposób:
 	\begin{itemize}
 		\item karty w kolejności malejącej z prawdopodobieństwem równym $\alpha/(\alpha+\beta+\gamma)$ 
 		
@@ -808,7 +808,7 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 	\chapter{Wyniki}
 	Do przedstawienia wyników dziania przedstawionych algorytmów ożyjemy dwóch. Pierwsza z nich będzie tabela obrazująca prawdopodobieństwo granej strategi uzyskanych przez jazdy z algorytmów przeciwko strategi pocztowej. Droga tabele zobrazuje natomiast wyniki działania naszych strategii przeciwko strategią uzyskanym przez pozostałe algorytmy.
 	Wyniki przedstawione na Tabelach \ref{table:war_results} i \ref{table:rrrats_results} oraz Rysunkach \ref{fig:war_results} i \ref{fig:rrrats_results} pokakują, że kazdemu z naszych alkorytmów odało sie zdaleśc strategie dającą sredio wikszy winnik od losowej strategi poczatkowej. Dodatkowo wyzaczone straetegie możemy zinterpretowac interpretować wprosty do zlozymnienia dla człowieka sposób.
-	W grze wojnnie istnieje strategia prosta, jest nią ukłądanie kart zawse w kolejnosci od nawiekszej do najmniejszej. Dodatkowo strategia ta 70\% szans na wygranie przeciwko straetgi ukłądania kart w sposób malejaćy, oraz 53\% szans na wygranie przeciwko strategi losowej.
+	W grze wojnnie istnieje strategia prosta, jest nią ukłądanie kart zawse w kolejnosci od nawiekszej do najmniejszej. Dodatkowo strategia ta ma 70\% szans na wygranie przeciwko straetgi ukłądania kart w sposób malejaćy, oraz 53\% szans na wygranie przeciwko strategi losowej.
 	\begin{table}[h]
 		\begin{center}
 			\begin{tabular}{lrrrr}
@@ -855,11 +855,11 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 		\caption{Wykresy pódełkowe przedwaiajace rezultaty uzyskanych strategi przeciwko strategi poczatkowej dla gry Wojna.}
 		\label{fig:war_results}
 	\end{figure}
-	\begin{figure}
+	\begin{figure}z
 		\centering
 		\includegraphics[width=0.8\textwidth]{imagens/rrrats_results.pdf}
 		%latinmodern w pythonie
-		\caption{Wykresy pódełkowe przedwaiajace rezultaty uzyskanych strategi przeciwko strategi poczatkowej dla gry Wojna.}
+		\caption{Wykresy pódełkowe przedwaiajace rezultaty uzyskanych strategi przeciwko strategi poczatkowej dla gry Rrrats.}
 		\label{fig:rrrats_results}
 	\end{figure}
 	
