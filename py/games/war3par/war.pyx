@@ -1,7 +1,10 @@
 import random
 import numpy as np
+cimport numpy as np
+np.import_array()
 import collections
 from mpire import WorkerPool
+from decimal import Decimal
 
 cdef list decks
 cdef short deck_len, half_deck_len
@@ -19,15 +22,16 @@ cdef class Player():
     """
     cdef list hand, cards
     cdef char card
-    cdef double parameters[3], strategy[3]
+    cdef double strategy[3]
+    cdef np.ndarray parameters
 
     def __init__(self, parameters, cards = None):
         if cards is None:
             self.hand = [0]*52
         else:
             self.hand = cards
-        self.strategy = [np.exp(i) for i in parameters]
-        
+        self.strategy = np.exp(parameters, dtype = np.float128)
+    
     def get_card(self) :
         return self.hand.pop(0)
 
@@ -87,19 +91,22 @@ def battle(player_1, player_2):
             elif player_2_card_2 > player_1_card_2:
                 winner = 2
                 return winner, cards
+
+
             
-def symulation(parameters1, parameters2, deck = deck):
+def symulation(parameters1, parameters2, deck = deck, k =0):
     cdef char battle_winner
     cdef list cards
     cdef list shuffle_decl
-    
+    np.random.seed()
     shuffle_decl = random.sample(deck, deck_len)
     player_1 = war3_player(parameters1)
     player_2 = war3_player(parameters2)
     player_1.set_hend(shuffle_decl[0:half_deck_len])
     player_2.set_hend(shuffle_decl[half_deck_len:deck_len])
-
+    i=0
     while 1:
+        i+=1
         try:
             battle_winner, cards = battle(player_1, player_2)
             if battle_winner == 1:
@@ -108,6 +115,11 @@ def symulation(parameters1, parameters2, deck = deck):
                 player_2.make_decision(cards)
         except:
             if player_1.get_hend_len() == 0:
-                return 1
+                return 0
             else:
-                return 2
+                return 1
+        if i > 20000:
+            shuffle_decl = random.sample(deck, deck_len)
+            player_1.set_hend(shuffle_decl[0:half_deck_len])
+            player_2.set_hend(shuffle_decl[half_deck_len:deck_len])
+            i = 0
