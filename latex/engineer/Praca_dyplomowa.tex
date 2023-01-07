@@ -97,8 +97,9 @@
 %
 % Krótkie streszczenia po polsku i angielsku
 % - nie dłuższe niż 530 znaków.
+
 \streszczenie{Celem rozprawy jest wyznaczenie nieoczekiwanych strategii w grach częściowo obserwowalnych za pomocą metod
-	stochastycznej optymalizacji. Praca będzie opierać się na wynikach Cauwet i Teytauda z 2018 roku, w których
+	stochastycznej optymalizacji. W prawy zostały wprowadzone nowe algorytmy pozwalające na znacznie szybsze wyznaczenie lepszej strategi niż ich oryginalne odpowiedniki. Praca będzie opierać się na wynikach Cauwet i Teytauda z 2018 roku, w których
 	przedstawili nieoczekiwane strategie dla kilku klasycznych gier oraz kilku metod optymalizacji. Podjęta zostanie
 	próba odtworzenia oraz rozszerzenia wyników na kolejną grę. Przeprowadzona zostanie analiza porównawcza dla
 	różnych metod optymalizacji.}
@@ -139,6 +140,16 @@
 \usepackage{enumitem}
 \usepackage[plmath]{polski}
 \usepackage{booktabs}
+\usepackage{icomma}
+%! popraw przecinki
+\usepackage{subcaption}
+\usepackage{hyperref}
+
+
+\addto\captionsenglish{\renewcommand{\figurename}{Rysunek}}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
 
 %icomma
 \DeclareRobustCommand{\bbone}{\text{\usefont{U}{bbold}{m}{n}1}}
@@ -147,7 +158,8 @@
 {%
 	#1 \thealgorithm:
 }
-
+\newcommand{\probP}{\mathbb{P}}
+\newcommand{\nmax}{n_{\text{max}}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -157,8 +169,8 @@
 \tableofcontents
 %\listoffigures
 %\listoftables
-
-{\backmatter \chapter{Wstęp}}
+{\backmatter \chapter{Wstęp}} 
+%\chapter{Wstęp}
 %We wstępie zapowiadamy, o czym będzie praca. Próbujemy zachęcić czytelnika do dalszej lektury, np. krótko informując, dlaczego wybraliśmy właśnie ten temat i co nas w nim zainteresowało.
 
 %\chapter{Rozdział pierwszy}
@@ -184,7 +196,7 @@
 %
 %%Do cytowania używamy komendy \texttt{cite}. W nawiasie klamrowym podajemy klucz, którego użyliśmy w pliku \emph{bibliografia.bib}. Przykład: \cite{einstein} lub \cite[chap. 2]{latexcompanion}.
 %
-%\section{Podrozdział pierwszy}
+%{Podrozdział pierwszy}
 %
 %\begin{table}[H]
 %\caption{Podstawowa Tabela}
@@ -221,19 +233,19 @@
 
 \chapter{Definicje, lematy, twierdzenia, przykłady i wnioski}
 Celem algorytmów, które będziemy wykorzystywać, jest znalezienie optymalnej strategii dla graczy w dwuosobowych grach częściowo obserwowalnych. Aby matematycznie opisać pojęcia gry i strategii optymalnej, wprowadzimy kilka podstawowych definicji.
-Definicje dotyczące podstaw teorii gier pochodzą z prac \cite{platkowski2012wstkep},\cite{prisner2014game}.
+Definicje dotyczące podstaw teorii gier pochodzą z prac \cite{platkowski2012wstkep}, \cite{prisner2014game}.
 
 \section{Czym jest gra?}
-Omówmy zatem co nazywamy gra w matematyce.
+Omówmy zatem, co nazywamy grą w matematyce.
 
 Gra w matematycznej teorii gie to sytuacja, w której gracze wybierają swoje strategie i otrzymują nagrody lub kary w zależności od podjętych decyzji  oraz losowych zdarzeń. Teoria gier pozwala na modelowanie i analizowanie takich sytuacji oraz umożliwia znajdowanie rozwiązań, które są optymalne dla graczy.
 
 Matematyczna definicja gry w teorii gier zazwyczaj zaczyna się od określenia następujących elementów:
 
 \begin{itemize}
-	\item Zbioru graczy: Zbiór graczy to zbiór wszystkich graczy biorących udział w grze. Może to być zbiór składający się z dwóch lub więcej elementów, w zależności od typu gry.
+	\item Zbioru graczy: Jest to zbiór wszystkich osób biorących udział w grze. Zbiór ten składa się z co najmniej dwóch elementów, w zależności od typu gry.
 	
-	\item Zbioru strategii: Zbiór strategii to zbiór wszystkich możliwych strategii, które mogą być wybierane przez graczy. Strategia to plan działania gracza, który zakłada, jakie ruchy gracz zamierza podjąć w danej grze.
+	\item Zbioru strategii: Jest to zbiór wszystkich możliwych strategii, które mogą być wybierane przez graczy. Strategia to plan działania gracza, który zakłada, jakie ruchy gracz zamierza podjąć w danej grze.
 	
 	\item Funkcji zwrotu: Funkcja zwrotu określa nagrody lub kary, które gracze otrzymują w zależności od ich strategii i losowych zdarzeń.
 	
@@ -241,23 +253,19 @@ Matematyczna definicja gry w teorii gier zazwyczaj zaczyna się od określenia n
 \end{itemize}
 
 Gry mogą być podzielone na kilka kategorii w zależności od kilku różnych kryteriów. Jednym z takich kryteriów jest moment, w którym gracze podejmują decyzje:
-%\begin{definition}[Gra]
-%Gra w matematycznym sensie jest sytuacja, w której gracze podejmują  decyzje zgodnie z określonymi zasadami w celu uzyskania jakiejś wypłaty.
-%\end{definition}
+
 \begin{definition}[Gra w postaci strategicznej]
 Jest to typ gry, w której gracze podejmują decyzje w tym samym
 momencie.
 \end{definition}
 \begin{definition}[Gra w postaci ekstensywnej]
-	Jest to typ gry, w której gracze podejmują decyzje we wcześniej
-	ustalonej kolejności.
+	Jest to typ gry, w której gracze podejmują decyzje we wcześniej ustalonej kolejności.
 \end{definition}
 Przykładami gier w postaci strategicznej są gry kamień papier nożyce, oszust czy też mora. Natomiast przykładami gier w postaci ekstensywnej są szachy, warcaby oraz go.
 
 Gry możemy również dzielić ze względu na posiadaną wiedzę.
 \begin{definition}[Gra z kompletną informacją]
-	Jest to typ gry, w której gracze mają informacje o możliwych
-	przyszłych wynikach gry i o zbiorach możliwych strategii.
+	Jest to typ gry, w której gracze mają informacje o możliwych przyszłych wynikach gry i o zbiorach możliwych strategii.
 \end{definition}
 \begin{definition}[Gra częściowo obserwowalna]
 	Jest to przeciwnie gier z kompletną informacją.
@@ -265,31 +273,31 @@ Gry możemy również dzielić ze względu na posiadaną wiedzę.
 Przykładami gier z kompletną informacją są szachy, warcaby oraz go.
 Natomiast przykładami gier częściowo obserwowanymi są wszelkie gry posiadające w rozgrywce pewien elementy losowe takie jak rzut kostką czy też dobieranie kart. 
 
-Istnieje jeszcze wiele innych podziałów gier ze wglądu na kategorie takie jak liczba graczy,zbiory dostępnych akcji, możliwość tworzenia koalicji i wiele innych.
+Istnieje jeszcze wiele innych podziałów gier ze wglądu na kategorie takie jak liczba graczy, zbiory dostępnych akcji, możliwość tworzenia koalicji i wiele innych.
 
 \section{Definicje i Oznaczenia}
 \subsection{Strategie proste}
-Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować czym jest strategia optymalna.
+Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować czym jest strategia optymalna:
 \begin{itemize}
-	\item $ N = \{1,2,\dots, n\} $ -- zbiór graczy,
-	\item $A_i,\; i \in N $ -- niepusty zbiór strategii  czystych gracza $i$,
-	\item $m_i = |A_i|$ -- liczba strategi gracza $i$,
-	\item $A = \displaystyle\prod_{i \in N} A_i$ -- zbiór wszystkich strategii gry, 
-	\item $u_i : A \rightarrow \mathbb{R} $ -- funkcja wypłaty gracza $i$,
-	\item $a=(a_1,a_2,\dots,a_n)=(a_i)_{i \in N},\; a_i \in A_i$ -- profil gry w strategiach czystych,
-	\item $u_i(a) = u_i(a,a_{-i})$ -- wypłata gracza $i$ z profilu $a$,
-	\item $a_{-i} = (a_i)_{i\in N \setminus \{i\}}$, -- profil wszystkich strategii poza strategią graca $i$.
+	\item $ N = \{1, 2, \dots, n\} $: zbiór graczy,
+	\item $A_i, i \in N $: niepusty zbiór strategii  czystych gracza $i$,
+	\item $m_i = |A_i|$: liczba strategi gracza $i$,
+	\item $A = \prod_{i \in N} A_i$: zbiór wszystkich strategii gry, 
+	\item $u_i : A \rightarrow \mathbb{R} $: funkcja wypłaty gracza $i$,
+	\item $a=(a_1, a_2, \dots, a_n)=(a_i)_{i \in N},\; a_i \in A_i$: profil gry w strategiach czystych,
+	\item $u_i(a) = u_i(a, a_{-i})$: wypłata gracza $i$ z profilu $a$,
+	\item $a_{-i} = (a_i)_{i\in N \setminus \{i\}}$: profil wszystkich strategii poza strategią graca $i$.
 \end{itemize}
 	\begin{definition}[Gra strategiczna]
-		Grą strategiczną nazywamy trójkę $GS = \langle N, (A_i)_{i \in N},(u_i)_{i \in N} \rangle $.
+		Grą strategiczną nazywamy trójkę $GS = \langle N,  (A_i)_{i \in N}, (u_i)_{i \in N} \rangle $.
 	\end{definition}
 	
 	\begin{definition}[Równowaga Nasha w strategiach czystych gry strategicznej]
-		Równowaga Nasha w strategiach czystych gry strategicznej jest to profil gry $a^*= (a_1^*,a_2^*,\dots,a_N^*)\in A$, takim, że
+		Równowaga Nasha w strategiach czystych gry strategicznej jest to profil gry $a^*= (a_1^*, a_2^*, \dots, a_N^*)\in A$, takim, że
 		\begin{align*}
 			\mathop{\forall}{i \in N}\;
 			\mathop{\forall}{a_i \in A_i} \quad
-			u_i(a_i^*,a_{-i}^*) \ge u_i(a_i, a_{-i}^*).
+			u_i(a_i^*, a_{-i}^*) \ge u_i(a_i, a_{-i}^*).
 		\end{align*}
 	\end{definition}
 	Zatem jest to profil gry, w którym istnieje strategia czysta dająca nie gorsze wyniki od dowolnej innej strategii czystej.
@@ -297,9 +305,9 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 	\subsection{Strategie mieszane}
 	%zmien sigmy na alfy
 	\begin{definition}[Strategia mieszana]
-		Strategia mieszana $\sigma_i$ graca $i$ w grze strategicznej $GS = \langle N, (A_i)_{i \in N},(u_i)_{i \in N} \rangle $. Nazywamy rozkład prawdopodobieństwa na zbiorze strategi czystych $A_i$:
+		Strategia mieszana $\sigma_i$ graca $i$ w grze strategicznej $GS = \langle N, (A_i)_{i \in N}, (u_i)_{i \in N} \rangle $. Nazywamy rozkład prawdopodobieństwa na zbiorze strategi czystych $A_i$
 		\begin{align*}
-			\sigma_i = (\sigma_{i1}, \sigma_{i2},\dots,\sigma_{im_i})
+			\sigma_i = (\sigma_{i1},  \sigma_{i2}, \dots, \sigma_{im_i})
 		\end{align*}
 	gdzie $\sigma_{ik}$ oznacza prawdopodobieństwo, że gracz $i$ zagra strategie czysta $k\in A_i$.  
 	\end{definition}
@@ -309,74 +317,65 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 	\end{fact}
 	Wprowadźmy dodatkowe oznaczenia:
  	\begin{itemize}
- 		\item $\Sigma_i  = \left\{ \sigma_i: A_i \rightarrow [0,1],\displaystyle\sum_{k=1}^{n} \sigma_{ik} = 1, \sigma_{ki}\ge 0 \right\}$ -- zbiór strategii mieszanych gracza $i$,
- 		\item  $\sigma = (\sigma_1, \sigma_2,\dots,\sigma_n)$ -- profil gry,
- 		\item $u_i(\sigma) = u_i(\sigma_i,\sigma_{-i})$ -- wypłata gracza $i$ z profilu $\sigma$,
- 		\item $\sigma_{-i} = (\sigma_i)_{i\in N \setminus \{i\}}$, -- profil wszystkich strategii poza strategią graca $i$. 
+ 		\item $\Sigma_i  = \left\{ \sigma_i: A_i \rightarrow [0, 1], \sum_{k=1}^{n} \sigma_{ik} = 1,  \sigma_{ki}\ge 0 \right\}$: Zbiór strategii mieszanych gracza $i$,
+ 		\item  $\sigma = (\sigma_1, \sigma_2, \dots, \sigma_n)$: Profil gry,
+ 		\item $u_i(\sigma) = u_i(\sigma_i, \sigma_{-i})$: Wypłata gracza $i$ z profilu $\sigma$,
+ 		\item $\sigma_{-i} = (\sigma_i)_{i\in N \setminus \{i\}}$: Profil wszystkich strategii poza strategią graca $i$. 
  	\end{itemize}
 	\begin{definition}[Równowaga Nasha w strategiach mieszanej gry strategicznej]
-		Profil gry strategicznej $\sigma_i^*$ jest Równowagą Nasha gdy:
+		Profil gry strategicznej $\sigma_i^*$ jest Równowagą Nasha gdy
 		\begin{equation*}
 			\mathop{\forall}{i \in N}\;
 			\mathop{\forall}{\sigma_i \in \Sigma_i} \quad
-			u_i(\sigma_i^*,\sigma_{-i}^*) \ge u_i(\sigma_i, \sigma_{-i}^*)
+			u_i(\sigma_i^*, \sigma_{-i}^*) \ge u_i(\sigma_i,  \sigma_{-i}^*).
 		\end{equation*}
 	Równowaga Nasha interpretujemy jako taki profil gry, w którym żaden z graczy nie opłaca się zmieniać swojej strategi, ponieważ nie skutkuje to zwiększeniem swoich zysków.
 	\end{definition}
-
 	\section{Twierdzenia}
-	Algorytmy \ref{alg:LEBR}, \ref{alg:ILEBR 1}, \ref{alg:ILEBR 2}, \ref{alg:IEBLR* 1}, \ref{alg:IEBLR* 2} wykorzystywane w poniższej pracy oparte są o dwa twierdzenia a dokładniej o szczególne przypadki wynikające z nierówności \ref{Hoffding ineq} i \ref{Bernsteina emp ineq}:
-	\begin{theorem}[Nierówność Hoffdinga]
-		\label{Hoffding ineq}
-		Niech $X_1,X_2,\dots,X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $a_i \le X_i \le b_i$, wtedy:
+	Algorytmy \ref{alg:LEBR}, \ref{alg:ILEBR 1}, \ref{alg:ILEBR 2}, \ref{alg:IEBLR* 1}, \ref{alg:IEBLR* 2} wykorzystywane w poniższej pracy oparte są o dwa twierdzenia a dokładniej o szczególne przypadki wynikające z nierówności \ref{Hoeffding ineq} i \ref{Bernsteina emp ineq}  \cite{heidrich2011non}.
+	\begin{theorem}[Nierówność Hoeffdinga]
+		\label{Hoeffding ineq}
+		Niech $X_1, X_2, \dots, X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $a_i \le X_i \le b_i$, wtedy:
 		\begin{gather*}
-			S_t = \sum_{i=1}^{t} X_i,\quad c_i = b_i - a_i, \\
-			P(|S_t - \EX(S_t)| \ge \epsilon ) \le 2\exp\left( -\frac{2\epsilon^2}{\sum_{i=1}^{n} c_i^2} \right)
+			S_t = \sum_{i=1}^{t} X_i, \quad c_i = b_i - a_i,  \\
+			\probP(|S_t - \EX(S_t)| \ge \epsilon ) \le 2\exp\left( -\frac{2\epsilon^2}{\sum_{i=1}^{n} c_i^2} \right).
 		\end{gather*}
 	\end{theorem}
 	\begin{lemma}
-		\label{Hoffding ineq lemma}
-		Niech $X_1,X_2,\dots,X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $0 \le X_i \le 1$, wtedy:
+		\label{Hoeffding ineq lemma}
+		Niech $X_1, X_2, \dots, X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $0 \le X_i \le 1$, wtedy:
 		\begin{gather*}
 			\overline{X}_t = \frac{S_t}{t},\quad 
-			\mu = \EX(X_i),\quad  	
-			P(|\overline{X}_t - \mu | \le \epsilon ) = 1 - \delta, \\
-			\epsilon \le  \sqrt{\frac{\ln(2/\delta)}{2t}}   
+			\mu = \EX(X_i), \quad  	
+			\probP(|\overline{X}_t - \mu | \le \epsilon ) = 1 - \delta,  \\
+			\epsilon \le  \sqrt{\frac{\ln(2/\delta)}{2t}} .
 		\end{gather*}
 	\end{lemma}
-
-		\begin{theorem}[Empiryczna nierówność Bernsteina]
+	\begin{theorem}[Empiryczna nierówność Bernsteina]
 		\label{Bernsteina emp ineq}
-		Niech $X_1,X_2,\dots,X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $a \le X_i \le b$, wtedy:
+		Niech $X_1, X_2, \dots, X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $a \le X_i \le b$, wtedy:
 		\begin{gather*}
-			P(|\overline{X}_t - \mu| \ge \epsilon ) \le  \delta, \quad \overline \sigma_t^2 = \frac{1}{t}\sum_{i=i}^{t}(X_i - \overline{X}_t)^2, \\
-			|\overline{X}_t - \mu | \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta)}{t}} + \frac{3 R \ln{(3 / \delta)}}{t}
+			\probP(|\overline{X}_t - \mu| \ge \epsilon ) \le  \delta,\quad \overline \sigma_t^2 = \frac{1}{t}\sum_{i=i}^{t}(X_i - \overline{X}_t)^2, \\
+			|\overline{X}_t - \mu | \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta)}{t}} + \frac{3 R \ln{(3 / \delta)}}{t}.
 		\end{gather*}
 	\end{theorem}
 	\begin{lemma}\label{Bernsteina emp ineq lemma}
-		Niech $X_1,X_2,\dots,X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $0 \le X_i \le 1$, wtedy:
+		Niech $X_1, X_2, \dots, X_t$ będzie ciągiem niezależnych zmiennych losowych (i.i.d.) takim, że $0 \le X_i \le 1$, wtedy:
 		\begin{gather*}
-			P(|\overline{X}_t - \mu | \le \epsilon ) = 1 - \delta,\\
-			\epsilon \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta)}{t}} + \frac{3  \ln{(3 / \delta)}}{t}
+			\probP(|\overline{X}_t - \mu | \le \epsilon ) = 1 - \delta, \\
+			\epsilon \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta)}{t}} + \frac{3  \ln{(3 / \delta)}}{t}.
 		\end{gather*}
 	\end{lemma}
-
 	\section{Problem porównań wielokrotnych}
-	Załóżmy, że z prawdopodobieństwem $1-\delta$ chcemy ustalić, który z dwóch graczy, $p_1$ i $p_2$ jest lepszy. W tym
-	celu będziemy przeprowadzać testy statystyczne, dla których
-	prawdopodobieństwo pomyłki k-tego testu wynosi $\delta_k$. Testy te będą kontynuowane aż do momentu, gdy jeden z graczy zwycięży większość przeważająca liczbę razy. 
-	
-	Po przeprowadzeniu $n$ takich testów:
-
+	Załóżmy, że z prawdopodobieństwem $1-\delta$ chcemy ustalić, który z dwóch graczy, $p_1$ i $p_2$ jest lepszy. W tym celu będziemy przeprowadzać testy statystyczne, dla których	prawdopodobieństwo pomyłki k-tego testu wynosi $\delta_k$. Testy te będą kontynuowane aż do momentu, gdy jeden z graczy zwycięży większość przeważająca liczbę razy. Po przeprowadzeniu $n$ takich testów:
 	\begin{gather*}
-		P(\text{Chociaż jeden z $n$ testów się pomylił}) \overset{(*)}{\le} \sum_{k=1}^n \delta_k \implies  \\
-	P(\text{Żaden test się nie pomylił}) \le 1 - \sum_{k=1}^n \delta_k,
+		\probP(\text{Chociaż jeden z $n$ testów się pomylił}) \overset{(*)}{\le} \sum_{k=1}^n \delta_k \implies  \\
+	\probP(\text{Żaden test się nie pomylił}) \le 1 - \sum_{k=1}^n \delta_k,
 	\end{gather*} 
-	gdzie nierówność oznaczona $(*)$ wynika z faktu, że $P(X+Y) \le P(X) + P(Y)$.
+	gdzie nierówność oznaczona $(*)$ wynika z faktu, że $\probP(X+Y) \le \probP(X) + \probP(Y)$.
 	
 	Aby ostateczne prawdopodobieństwo popełnienia błędu było mniejsze niż $\delta$, konieczne jest wprowadzenie odpowiedniej korekty.
 	Możemy zastosować jedna z dwóch poprawek:
-
 	\begin{enumerate}[label=\thesection.\arabic*]
 		\item \label{korekta 1} Niech $n$ będzie maksymalną liczbą testów jaką pozwalamy wykonać, aby wyznaczyć lepszego
 		gracza. Wtedy $\delta_k=\frac{\delta}{n}$.
@@ -384,98 +383,111 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 		ilości przeprowadzonych testów, ostateczne
 		prawdopodobieństwo pomyłki będzie nie większe niż~$\delta$.
 	\end{enumerate}
-
+	Wykorzystując Lemat~\ref{Bernsteina emp ineq lemma} oraz korektę \ref{korekta 2} otrzymujemy, że dla ciągu $X_1, X_2, \dots, X_t$ i.i.d. zmiennych losowych takim, że  $0 \le X_i \le 1$ 
+	\begin{align}
+		\label{Bernstein race without maximum race length}
+		\epsilon_{t, k} \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta_k)}{t}} + \frac{3  \ln{(3 / \delta_k)}}{t}.
+	\end{align}
+	Wtedy $(\overline{X}_t - \epsilon_{t,k}, \overline{X}_t + \epsilon_{t,k})$ interpretujemy jako przedziałem ufności dla $\mu$ o współczynniku ufności $1-\delta_k$.
+	\begin{lemma}
+		\label{lemma Bernstein race without maximum race length}
+		Niech $X_1, X_2, \dots, X_t$ będzie ciągiem i.i.d. zmiennych losowych takim, że  $0 \le X_i \le 1$. Dodatkowo niech liczba rozegranych gier będzie funkcja zależną od k ($f(k) = t$) oraz niech $\delta_k = \frac{\delta}{g(k)}$
+		gdzie $\delta \ge \sum_{k=1}^{\infty} \frac{\delta}{g(k)}$ i $\ln(g(k)) \in o(f(k))$. Wtedy
+		$\lim\limits_{k\to\infty} e_{f(k), k} = 0$. 
+	\end{lemma}
+	Dowód Lematu \ref{lemma Bernstein race without maximum race length} znajduje się na końcu minimuszej pracy w sekcji \hyperref[proof:lemma Bernstein race without maximum race length]{Dodatek}.
+	
+	Lemat \ref{lemma Bernstein race without maximum race length} pozwala nam na ograniczane ilości przeprowadzanych testów do wyznaczenia lepszego gracza oraz określa, w jaki spór możemy  przeprowadzać  testy, aby nie stracić zbieżności.
+	Wynik ten jest istoty, ponieważ podejście oparte o próbę wyznaczenia, który z graczy jest lepszy po każdej rozegranej grze prowadzi do nadmiernej ilości wykonywanych testów.
+	Przykładem funkcjami, jakimi możemy użyć do Lematu \ref{lemma Bernstein race without maximum race length} są $f(k) = k^2, g(k) = \frac{6/\pi^2}{k^2}$. Teaki dobór funkcji oznacza ze $k$-ty test odbywa się, gdy liczba przeprowadzonych gier wynosi $k^2$.
 	\chapter{Algorytmy}
 	\section{Algorytmy wyścigowe}
-	Do algorytmów wykorzystujących korekty \ref{korekta 1} i \ref{korekta 2} są algorytmy wyścigowe
-	(\selectlanguage{english}{Racing Algorytms}) [cytat]. Dwoma najpopularniejszymi typami algorytmów ratingowych są ,,Hoffding race'' oraz ,,Bernstein race''.
-	Oparte są one odpowiednio o Twierdzenie \ref{Hoffding ineq} i Twierdzenie \ref{Bernsteina emp ineq lemma} oraz korektę \ref{korekta 2}. Mają one jednak pewną wadę, mogą one wymagać bardzo dużej liczby iteracji, a gdy poziom umiejętności porównywanych graczy jest sobie równy (prawdopodobieństwo wygranej wynosi 50\%), wtedy z prawdopodobieństwem równym $1-\delta$ algorytm nigdy się nie zatrzyma.
+	Do algorytmów wykorzystujących korekty \ref{korekta 1} i \ref{korekta 2} nalezą algorytmy wyścigowe (\selectlanguage{english}{Racing Algorytms}) \cite{Mnih_2008}. Dwoma najpopularniejszymi typami algorytmów ratingowych są ,,Hoeffding race'' oraz ,,Bernstein race''.
+	Oparte są one odpowiednio o Twierdzenie~\ref{Hoeffding ineq} i Twierdzenie~\ref{Bernsteina emp ineq lemma} oraz korektę \ref{korekta 2}. Mają one jednak pewną wadę, mogą one wymagać bardzo dużej liczby iteracji, a gdy poziom umiejętności porównywanych graczy jest sobie równy (prawdopodobieństwo wygranej wynosi 50\%), wtedy z prawdopodobieństwem równym $1-\delta$ algorytm nigdy się nie zatrzyma.
 	
 	Aby rozwiązać problemy związane z klasycznymi algorytmami wyścigowymi, wprowadzamy tzw. Limited Racing algorytm. Załóżmy zatem dodatkowy warunek, który mówi, że przerywamy działanie algorytmu, gdy empiryczna wartość oczekiwana z prawdopodobieństwem większym bądź równym $1-\delta$ jest znana z dokładnością co do zadanego $\epsilon$. W naszej pracy przyjmiemy $\epsilon=0.01$ i $\delta = 0.05$.
-	\subsection{Algorytm Limited Empirical Bernstein Race (LEBR)}
-	Klasyczny algorytm racingowy opiera się na szeregu $\epsilon_t$, spełniającej warunek, że zdarzenie $\mathcal{E}= \{|\overline{X}_t - \mu | \le \epsilon_t,\; t\in \mathbb{N}^+\}$ występuje z prawdopodobieństwem nie mniejszym niż $1-\delta$. Dodatkowo niech $\delta_k$ będzie dodatnim szeregiem spełniającym $ \delta \ge \sum_{k = 1}^{\infty}\delta_k$. Wtedy korzystając z Lematu \ref{Bernsteina emp ineq lemma}
+	\subsection{Limited Empirical Bernstein Race (LEBR) algorytm}
+	Klasyczny algorytm racingowy opiera się na szeregu $\epsilon_t$, spełniającej warunek, że zdarzenie $\mathcal{E}= \{|\overline{X}_t - \mu | \le \epsilon_t,  t\in \mathbb{N}^+\}$ występuje z prawdopodobieństwem nie mniejszym niż $1-\delta$. Dodatkowo niech $\delta_k$ będzie dodatnim szeregiem spełniającym $ \delta \ge \sum_{k = 1}^{\infty}\delta_k$. Wtedy korzystając z Lematu \ref{Bernsteina emp ineq lemma}
 	\begin{gather*}
-		\label{eq:LEBR epsilon}
 		\epsilon_t =  \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta_t)}{t}} + \frac{3  \ln{(3 / \delta_t)}}{t}.
 	\end{gather*}
-	Ponieważ $\delta_k$ sumuje się co najmniej do $\delta$, a $(\overline{X}_t - \epsilon_t, \overline{X}_t + \epsilon_t)$ jest przedziałem ufności dla $\mu$ o współczynniku ufności $1-\delta_t$ 
-	otrzymanym z Lematu \ref{Bernsteina emp ineq lemma}, oznacza to, że zdarzenie $\mathcal{E}$ występuję z prawdopodobieństw nie mniejszym niż $1-\delta$. Identyczny rezultat otrzymujemy stosując $\epsilon_t$ oparte o Lemat \ref{Hoffding ineq lemma} jednak zmienia się wtedy postać $\epsilon_t$. W pracy \cite{cauwet2018surprising} algorytm opierał się o szereg $\delta_t=\frac{c\delta}{t^2},\; c=\frac{6}{\pi^2}$.
-	Pseudokod algorytmu, przedstawiony jako Algorytm \ref{alg:LEBR}, opiera się na rozgrywaniu $t$ gi obliczeniu górnej granicy $\text{UB} = \min_{1\le k\le t}( \overline{X}_k+c_k)$ oraz dolną granice $\text{LB} = \max(0, \max_{1\le k\le t}(\overline{X}_k-c_k))$. Algorytm kończy działanie, gdy różnica między $\text{UB}$ a $\text{LB}$ jest mniejsza niż $2\epsilon$. Otrzymane w ten sposób $\overline{X}$ z prawdopodobieństwem nie mniejszym niż $1 - \delta$ jest bliskie wartości $\mu$ z dokładnością co zadanego $\epsilon$.
+
+	Ponieważ $\delta_k$ sumuje się co najwyżej do $\delta$, a $(\overline{X}_t - \epsilon_t, \overline{X}_t + \epsilon_t)$ jest przedziałem ufności dla $\mu$ o współczynniku ufności $1-\delta_t$, oznacza to, że zdarzenie $\mathcal{E}$ występuję z prawdopodobieństw nie mniejszym niż $1-\delta$. Podobny rezultat otrzymujemy stosując $\epsilon_t$ oparte o Lemat~\ref{Hoeffding ineq lemma} jednak zmienia się wtedy postać $\epsilon_t$. W pracy \cite{cauwet2018surprising} algorytm opierał się o szereg $\delta_t=\frac{c\delta}{t^2}, c=\frac{6}{\pi^2}$.
+	Pseudokod algorytmu, przedstawiony jest jako Algorytm \ref{alg:LEBR}, opiera się on na rozgrywaniu $t$ gier i obliczeniu górnej granicy $\text{UB} = \min_{1\le k\le t}( \overline{X}_k+c_k)$ oraz dolną granice $\text{LB} = \max(0, \max_{1\le k\le t}(\overline{X}_k-c_k))$. Algorytm kończy działanie, gdy różnica między $\text{UB}$ a $\text{LB}$ jest mniejsza niż $2\epsilon$. Otrzymane w ten sposób $\overline{X}$ z prawdopodobieństwem nie mniejszym niż $1 - \delta$ jest bliskie wartości $\mu$ z dokładnością co zadanego $\epsilon$.
 	\begin{algorithm}
 		\caption{LEBR}\label{alg:LEBR}
 		\begin{algorithmic}
 			\Ensure precision $\epsilon$, probabilitys $\delta_k$
-			\State $LB \gets 0, \quad UB \gets \infty, \quad t \gets 0,\quad n \gets 1$ 
+			\State $LB \gets 0,\quad UB \gets \infty,\quad t \gets 0,\quad n \gets 1$ 
 			\While{$ UB - LB > 2\epsilon $} 
 			\State $t \gets t + 1$
 			\State Obtain $X_t$
 			\State $\delta_n \gets \frac{6\delta}{\pi^2n^2}$					
 			\State $\epsilon_n \gets \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{n}} + \frac{3  \ln{(3 / \delta_n)}}{n}$ 
-			\State $LB \gets \max(LB,  \overline{X_n} - \epsilon_n)$
-			\State $UB \gets \min(UB,  \overline{X_n} + \epsilon_n)$
+			\State $LB \gets \max(LB, \overline{X_n} - \epsilon_n)$
+			\State $UB \gets \min(UB, \overline{X_n} + \epsilon_n)$
 			\State $n \gets n + 1$
 			\EndWhile
 			\State \Return $ \overline{X_t}$		
 		\end{algorithmic}
 	\end{algorithm}
-	tu skonczyłem sprawdzanie
 	\subsection{Improved LEBR (ILEBR)}
-	Algorytm \ref{alg:LEBR} opiera się na korekcie \ref{korekta 2} która zakłada możliwie nieskończoną ilość testów. Jednak dołożenie ograniczenia na temat żądanej dokładności rzędu $\epsilon$ pozwala nam znaleźć maksymalną ilość testów jaką należy wykonać aby z prawdopodobieństwem nie mniejszym niż $1-\delta$ empiryczna wartość oczekiwana była równa teoretycznej wartości oczekiwanej z dokładnością co do $\epsilon$. Niech $\delta_k = \frac{\delta}{n_{max}}$ gdzie $n_{max}$ oznacza maksymalną potrzebną ilość testów. Z Lematu \ref{Hoffding ineq lemma} niezależnie od odchylenia standardowego zmiennej losowej $X_i$ jesteśmy w stanie oszacować $n_{max}$ rozwiązując analitycznie poniższe równie \ref{eq:ILEBR Hoffdin}
+	Algorytm \ref{alg:LEBR} jest oparty na korekcie \ref{korekta 2}, która zakłada możliwie nieskończoną ilość testów. Jednak dołączenie ograniczenia dotyczącego żądanej dokładności $\epsilon$ pozwala nam znaleźć maksymalną ilość testów, jaką należy wykonać, aby z prawdopodobieństwem nie mniejszym niż $1-\delta$ empiryczna wartość oczekiwana była równa teoretycznej wartości oczekiwanej z dokładnością co do $\epsilon$. Niech $\delta_k = \frac{\delta}{\nmax}$ gdzie $\nmax$ oznacza maksymalną ilość testów potrzebną do wyznaczenia lepszego gracza. Rozwiązując numerycznie równanie \eqref{eq:ILEBR Hoeffdin} wynikające z Lematu \ref{Hoeffding ineq lemma}, możemy ustalić maksymalną potrzebną ilość testów, niezależnie od odchylenia standardowego zmiennej losowej $X_i$
 	\begin{gather}
-		\label{eq:ILEBR Hoffdin}
-		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2n_{max}}}.
+		\label{eq:ILEBR Hoeffdin}
+		\epsilon =  \sqrt{\frac{\ln(2\nmax/\delta)}{2\nmax}}.
 	\end{gather}
-
-	Dla $\epsilon=0.01$ i $\delta=0.05$ rozwiązaniem numerycznym równania \ref{eq:ILEBR Hoffdin} jest $n_{max}=74539.85$.
-	Oznacza to że maksymalna ilość gier jaką  należy rozegrać między dwoma graczami aby z prawdopodobieństwem nie mniejszym niż $1-0.05$ oszacować prawdopodobieństwo wygrania gry przez pierwszego gracza z dokładniejsi co do $0.01$ wynosi $\lceil n_{max} \rceil = 74540$. 
+	Dla $\epsilon=0.01$ i $\delta=0.05$ rozwiązaniem numerycznym równania \eqref{eq:ILEBR Hoeffdin} jest $\nmax=74539.85$. Oznacza to, że aby z prawdopodobieństwem nie mniejszym niż $1-0.05$ oszacować prawdopodobieństwo wygrania gry przez pierwszego gracza z dokładnością co do $0.01$, maksymalna ilość gier, jaką należy rozegrać między dwoma graczami wynosi $\nmax  = 74540$.
 	   
-	Podobnie możemy postąpić w przypadku nierówności Bernsteina.
+	Powyższą metodę możemy również zastosować w przypadku nierówności Bernsteina.
 	Na początku jednak musimy oszacować z góry $\overline{\sigma}_t$.
-	Przyjmijmy, że $X_i$ jest zmienną z rozkładu zero-jedynkowego.
-	Wtedy maksymalna możliwa wariancja dla takiej zmiennej losowej wynosi $\sigma^2 = 0.25$. Jest to również maksymalna możliwa wartość dla naszej empirycznej wariancji. Podstawiając wtedy $\delta_n = \frac{0.05}{n}, \epsilon = 0.01$ do Lematu \ref{Bernsteina emp ineq lemma} otrzymujemy
+	Przyjmijmy, że $X_i$ to zmienna losowa o rozkładzie zero-jedynkowym.
+	Wtedy maksymalna możliwa wariancja dla takiej zmiennej losowej wynosi $\sigma^2 = 0.25$. Jest to również maksymalna możliwa wartość dla naszej empirycznej wariancji. Podstawiając $\delta_{n} = \frac{0.05}{\nmax}, \epsilon = 0.01$ do Lematu \ref{Bernsteina emp ineq lemma} otrzymujemy
 	\begin{gather}
 		\label{eq:ILEBR Bernstein}
-		0.01 \le \sqrt{\frac{\ln(\frac{3n_{max}}{0.05})}{2n_{max}}} + \frac{3  \ln(\frac{3n_{max}}{0.05})}{n_{max}}.
+		0.01 \le \sqrt{\frac{\ln(\frac{3\nmax}{0.05})}{2\nmax}} + \frac{3  \ln(\frac{3\nmax}{0.05})}{\nmax}.
 	\end{gather}
-	Rozwiązaniem numerycznym równania \eqref{eq:ILEBR Bernstein} jest $n_{max}=86329$. Jednak granice oparte o nierówność Bernsteina zalezą od wariancji. Sprawdźmy zatem jak wygląda $n_{max}$ w zalotności od $\sigma^2$.
+	Dla $\epsilon=0.01$ i $\delta=0.05$ rozwiązaniem numerycznym równania \eqref{eq:ILEBR Bernstein} jest $\nmax=86329$. Jednak granice oparte o nierówność Bernsteina zalezą od wariancji. Sprawdźmy zatem jak wygląda $\nmax$ w zależności od $\sigma^2$.
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.75\textwidth]{imagens/t_eq_n.pdf}
 		%latinmodern w pythonie
-		\caption{Wykres maksymalnej potrzebnej ilości testów w zależności od wariancji zmiennych losowych  $X_i$ w przypadku gdy liczba testów jest równa liczbie gier ($t = n$) dla $\epsilon=0.01$ i $\delta = 0.05$.}
+		\caption{Wykres maksymalnej potrzebnej ilości testów w zależności od wariancji zmiennych losowych  $X_i$ w przypadku gdy liczba przeprowadzonych testów jest równa liczbie gier ($t = n$) dla $\epsilon=0.01$ i $\delta = 0.05$.}
 		\label{fig:t_eq_n}
 	\end{figure}
-	Z Rysunku \ref{fig:t_eq_n} widzimy zatem, że algorytm oparty o nierówność Bernsteina radzi sobie lepiej w przypadku gdy niskiej wariancji. Co więcej niezależnie od ilości wykonywanych testów, dla $\delta_n = \frac{0.05}{74540}$ maksymalna ilość gier po której z prawdopodobieństwem $1-0.05$ wiemy że $|\overline{X_i} - \mu| \le 0.01$ wynosi $74540$. Oznacza to że do Algorytmu \ref{alg:LEBR} możemy zastosować funkcje $\epsilon_k$ opartą o $\delta_k = \frac{\delta}{n_{max}}$ oraz dołożyć nowy warunek zatrzymania algorytmu gdy liczba wykonanych testów przekroczy $n_{max}$. Dotychczas uwzględnione poprawki przedstawione sa przy Algorytmu \ref{alg:ILEBR 1}.
+	Z Rysunku \ref{fig:t_eq_n} widzimy, że algorytm oparty o nierówność Bernsteina szybciej kończy działanie w przypadku gdy jedna z porównywanych strategi jest silnie dominująca. Co więcej, z równania \eqref{eq:ILEBR Hoeffdin} wynika, że niezależnie od ilości wykonywanych testów, dla $\delta_n = \frac{0.05}{74540}$ maksymalna ilość gier, po której z prawdopodobieństwem $1-0.05$ wiemy, że $|\overline{X_i} - \mu| \le 0.01$ wynosi $74540$. 
+	
+	Algorytm \ref{alg:ILEBR 1} jest modyfikacją Algorytmu \ref{alg:LEBR} uwzględniającą ograniczenie na maksymalną liczbę wykonywanych testów, wynikającej z analizy nierówności Bernsteina i Hoeffdinga. W szczególności został dodany warunek zatrzymania algorytmu, gdy liczba wykonanych testów przekroczy $\nmax$. 
 	\begin{algorithm}[H]
 		\caption{ILEBR 1}\label{alg:ILEBR 1}
-		
 		\begin{algorithmic}
 			\Ensure precision $\epsilon$, probability $\delta$
-			\State $LB \gets 0, \quad UB \gets \infty, \quad t \gets 0,\quad n \gets 1$
-			\State Find $n_{max}$ such as $		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2n_{max}}} $
-			\Statex $\delta_n = \delta/n_{max}$
-			\While{$ UB - LB > 2\epsilon $ or $n\le n_{max}$}  
+			\State $LB \gets 0, \quad UB \gets \infty, \quad t \gets 0, \quad n \gets 1$
+			\State Find $\nmax$ such as $		\epsilon =  \sqrt{\frac{\ln(2\nmax/\delta)}{2\nmax}} $
+			\Statex $\delta_n = \delta/\nmax$
+			\While{$ UB - LB > 2\epsilon $ or $n\le \nmax$}  
 			\State $t \gets t + 1$
 			\State Obtain $X_t$
 			\State $\epsilon_n \gets \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{n}} + \frac{3  \ln{(3 / \delta_n)}}{n}$ 
-			\State $LB \gets \max(LB,  \overline{X_n} - \epsilon_n)$
-			\State $UB \gets \min(UB,  \overline{X_n} + \epsilon_n)$
+			\State $LB \gets \max(LB, \overline{X_n} - \epsilon_n)$
+			\State $UB \gets \min(UB, \overline{X_n} + \epsilon_n)$
 			\State $n \gets n + 1$
 			\EndWhile
 			\State \Return $ \overline{X_t}$		
 		\end{algorithmic}
 	\end{algorithm}
-	Algorytmy \ref{alg:LEBR} i \ref{alg:ILEBR 1} przeprowadzały testy po każdej rozegranej grzęz, skutkuje to wytopieniem bardzkiej ilości testów. Zamiast przeprowadzać test po każdej rozegranej grze, niech test odbywa się w momencie gdy liczba rozegranych gier będzie równa pewnej funkcji zależnej od ilości przeprowadzonych testów. Na podstawie artykuł \cite{heidrich2011non} wiemy że funkcja która pozwoli nam na polepszenie wyników jest $t = n^2$. Przeprowadźmy identyczną procedure jak w przypadku równań \eqref{eq:ILEBR Hoffdin} i \eqref{eq:ILEBR Bernstein}. Tym razem jednak zamiast stosować $t = n$ do Lematów \ref{Hoffding ineq lemma} i \ref{Bernsteina emp ineq lemma}  zastosujmy $t = n^2$.
+	\subsection{ILEBR 2}
+	Algorytmy \ref{alg:LEBR} i \ref{alg:ILEBR 1} przeprowadzały testy po każdej rozegranej grzęz, czym skutkuje to wytopieniem bardzo dużej ilości testów. Wprowadzamy zatem pewną zmianę do naszych algorytmów. Zamiast przeprowadzać test po każdej rozegranej grze, niech test odbywa się w momencie, gdy liczba rozegranych gier będzie równa wartości pewnej funkcji zależnej od ilości przeprowadzonych testów. Na podstawie wyników z artykuł \cite{heidrich2011non} wiemy, że funkcją, która pozwoli nam na polepszenie wyników jest $t = n^2$. Aby uzyskać optymalne wyniki, przeprowadźmy tę samą procedurę, jak w przypadku równań \eqref{eq:ILEBR Hoeffdin} i \eqref{eq:ILEBR Bernstein}, ale zamiast stosować $t = n$ w Lematach \ref{Hoeffding ineq lemma} i \ref{Bernsteina emp ineq lemma} zastosujemy $t = n^2$.
 	
-	W przypadku granicy opartej o nierówność Hoffdina otrzymujemy
+	W przypadku granicy opartej o nierówność Hoeffdinga otrzymujemy
 	\begin{gather}
-		\label{eq:ILEBR Hoffdin t=n^2}
-		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2n_{max}^2}} \implies t_{max} = \lceil n_{max} \rceil^2 = \lceil213\rceil^2= 45369.
+		\label{eq:ILEBR Hoeffdin t=n^2}
+		0.01 =  \sqrt{\frac{\ln(2\nmax/\delta)}{2\nmax^2}} \implies t_{max} = \lceil \nmax \rceil^2 = \lceil213\rceil^2= 45369.
 	\end{gather}
 	W przypadku granicy opartej o nierówność Bernsteina otrzymujemy
 	\begin{gather}
-		\label{eq:ILEBR Bernstein t=n^2}
-		0.01 \le \sqrt{\frac{\ln(\frac{3n_{max}}{0.05})}{n_{max}^2}} + \frac{3  \ln(\frac{3n_{max}}{0.05})}{n_{max}}^2\implies t_{max} = \lceil n_{max} \rceil^2 = \lceil230.751^2\rceil= 53247. 
+		\label{eq:ILEBR Bernstein t=n^2_1}
+		0.01 \le \sqrt{\frac{\ln(\frac{3\nmax}{0.05})}{\nmax^2}} + \frac{3  \ln(\frac{3\nmax}{0.05})}{\nmax^2}\implies t_{max} = \lceil \nmax \rceil^2 = \lceil230.751^2\rceil= 53247. 
 	\end{gather}
 	\begin{figure}
 		\centering
@@ -484,37 +496,37 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 		\caption{Wykres maksymalnej potrzebnej ilości testów w zależności od wariancji zmiennych losowych  $X_i$ w przypadku gdy liczba rozegranych gier jest równa liczbie przeprowadzonych testów do kwadratu ($t = n^2$) dla $\epsilon=0.01$ i $\delta = 0.05$.}
 		\label{fig:t_eq_n_q}
 	\end{figure}
-	Porównując ze sobą uzyskane wartość z wzoru \eqref{eq:ILEBR Hoffdin} oraz \eqref{eq:ILEBR Hoffdin t=n^2} widzimy że udało się zmniejszyć maksymalną ilość gier jakie należny wykonać z 74540 do 45369.
-	Wprowadźmy zatem nowo uzyskane poprawki trwożąc Algorytm \ref{alg:ILEBR 2}.
+	Porównując uzyskane wartości \eqref{eq:ILEBR Hoeffdin t=n^2}, \eqref{eq:ILEBR Bernstein t=n^2_1} z wartościami \eqref{eq:ILEBR Hoeffdin} i \eqref{eq:ILEBR Bernstein}, widzimy, że udało się nam zmniejszyć maksymalną ilość gier, które należy wykonać z 74540 do 45369. Wprowadźmy więc nowe poprawki do Algorytmu \ref{alg:ILEBR 2}.
 	\begin{algorithm}[H]
 		\caption{ILEBR 2}\label{alg:ILEBR 2}
 		\begin{algorithmic}
 			\Ensure precision $\epsilon$, probability $\delta$
-			\State $LB \gets 0, \quad UB \gets \infty, \quad t \gets 0,\quad n \gets 1$
-			\State Find $n_{max}$ such as $		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2n_{max}^2}} $
-			\Statex $\delta_n = \delta/n_{max}$
-			\While{$ UB - LB > 2\epsilon $ or $n \le n_{max}$}  
+			\State $LB \gets 0, \quad UB \gets \infty, \quad t \gets 0, \quad n \gets 1$
+			\State Find $\nmax$ such as $		\epsilon =  \sqrt{\frac{\ln(2\nmax/\delta)}{2\nmax^2}} $
+			\Statex $\delta_n = \delta/\nmax$
+			\While{$ UB - LB > 2\epsilon $ or $n \le \nmax$}  
 			\Repeat 
 			\State $t \gets t + 1$
 			\State Obtain $X_t$
 			\Until $t=n^2$
 			\State $\epsilon_n \gets \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{n^2}} + \frac{3  \ln{(3 / \delta_n)}}{n^2}$ 
-			\State $LB \gets \max(LB,  \overline{X_n} - \epsilon_n)$
-			\State $UB \gets \min(UB,  \overline{X_n} + \epsilon_n)$
+			\State $LB \gets \max(LB, \overline{X_n} - \epsilon_n)$
+			\State $UB \gets \min(UB, \overline{X_n} + \epsilon_n)$
 			\State $n \gets n + 1$
 			\EndWhile
 			\State \Return $ \overline{X_t}$		
 		\end{algorithmic}
 	\end{algorithm}
-	Do tej pory Wszystkie stosowane algorytmy wyznaczały nam prawdopodobieństwo wygranej pierwszego gracza. Jednak nam nie zależny na tym dokładnie znać prawdopodobieństwo wygranej graczy. Głównym celem algorytmów jest odnalezienie lepszego gracza. Pozwala nam to modyfikacje Algorytmu \ref{alg:ILEBR 2} o nowe warunki zatrzymania.
+	\subsection{ILEBR*}
+	Do tej pory Wszystkie stosowane algorytmy wyznaczały nam prawdopodobieństwo wygranej pierwszego gracza. Jednak nam nie zależy na tym, aby dokładnie znać prawdopodobieństwo wygranej graczy. Głównym celem algorytmów jest odnalezienie lepszego z nich. Pozwala nam to na modyfikacje Algorytmu \ref{alg:ILEBR 2} o nowe warunki zatrzymania. Warunie tym jest zatrzymanie działania algorytmu w momencie, gdy górna bądź dolna granica przekroczy wartość $0.5$. 
 	\begin{algorithm}[H]\captionsetup{labelformat=custom2}
 		\caption{ILEBR* 1}\label{alg:IEBLR* 1}
 		\begin{algorithmic}
 			\Ensure precision $\epsilon$, probability $\delta$ 
 			\State  $ LB \gets 0,\quad UB \gets \infty,\quad t \gets 1,\quad n \gets 0 $
-			\State Find $n_{max}$ such as $		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2n_{max}^2}} $
-			\Statex $\delta_n = \delta/n_{max}$
-			\While{$( UB - LB > 2\epsilon $ or $n < n_{max}+1)$ and $ (UB > 0.5 \text{ or } LB < 0.5)$}
+			\State Find $\nmax$ such as $		\epsilon =  \sqrt{\frac{\ln(2\nmax/\delta)}{2\nmax^2}} $
+			\Statex $\delta_n = \delta/\nmax$
+			\While{$( UB - LB > 2\epsilon $ or $n < \nmax+1)$ and $ (UB > 0.5 \text{ or } LB < 0.5)$}
 			\Repeat 
 			\State $t \gets t + 1$
 			\State Obtain $X_t$
@@ -535,36 +547,34 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 			\EndIf
 		\end{algorithmic}
 	\end{algorithm}
-	Do tej pory staraliśmy się ograniczyć z góry maksymalną ilość rozgrywanych gier. Jednak oczywistym faktem jest że nie ma sensu testowania który z graczy jest lepszy w monecie gdy ilość rozegranych gier jest niewystarczająco mały. Jadnak jak wyznaczyć nasze minimalne $t$ po którym zaczniemy testować? Algorytm oparte o nierówność Bernsteina najszybciej wyznaczają wynik w przypadku gdy wariancja naszej zmiennej losowej wynosi 0 (jeden z graczy zawsze wygrywa). Dla Algorytmu \ref{alg:IEBLR*} interesuje nas monet od którego będziemy w stanie rozróżnić kiedy dolna bać górna granica przekroczy $\frac{1}{2}$. Zatem oszacujmy $n_{min}$ korzystać z Lematu \ref{Bernsteina emp ineq lemma} dla $\overline{\sigma}_t=0$ i $t = n^2$.  
-	
-	
-	
+	\subsection{ILEBR* 2}
+	Do tej pory skupialiśmy się na ograniczeniu maksymalnej ilości rozgrywanych gier. Jednak oczywiste jest, że nie ma sensu testować, który z graczy jest lepszy, gdy ilość rozegranych gier jest zbyt mała. Jadnak jak wyznaczyć nasze minimalne $t$, po którym przeprowadzamy pierwszy test? Algorytm oparty na nierówności Bernsteina najszybciej wyznacza wynik, gdy wariancja naszej zmiennej losowej wynosi 0 (jeden z graczy zawsze wygrywa). Dla Algorytmu \ref{alg:IEBLR* 1} interesuje nas moment, od którego będziemy w stanie rozróżnić, kiedy dolna lub górna granica przekroczy $0.5$. Zatem oszacujmy $n_{min}$ korzystając z Lematu \ref{Bernsteina emp ineq lemma} dla $\overline{\sigma}_t=0$ i $t = n^2$.
 	\begin{gather*}
 		\label{eq:ILEBR Bernstein t=n^2}
-		0.5 \le \frac{3  \ln(\frac{3n_{max}}{0.05})}{n_{min^2}}\implies t_{min} = \lceil n_{min} \rceil^2 = \lceil7.53219\rceil^2= 64. 
+		0.5 \le \frac{3  \ln(\frac{3\nmax}{0.05})}{n_{min^2}}\implies t_{min} = \lceil n_{min} \rceil^2 = \lceil7.53219\rceil^2= 64. 
 	\end{gather*}
-	Oznacza to, że przy $\epsilon=0.01$ i $\delta= 0.05$ w przypadku gdy jeden graczy wygrywa zawsze, będziemy w stanie to stwierdzić nie prędzej niż po 64 grach.
-	Na tej podstawie wyznaczy nowe $n_{max}$ uwzględniając pomijanie pierwsze niepotrzebne testy.
+	Oznacza to, że przy $\epsilon = 0.01$ i $\delta = 0.05$ w przypadku gdy jeden gracz zawsze wygrywa, będziemy w stanie to stwierdzić nie wcześniej niż po rozegraniu 64 grach.
+	Na tej podstawie wyznaczmy nowe $\nmax$ uwzględniając pomijanie pierwszych niepotrzebnych testów.
 	\begin{gather}
-		\label{eq:ILEBR Hoffdin t=n^2 and t_min}
-		0.01 =  \sqrt{\frac{\ln(2n_{max}/0.05)}{2(n_{max}+7)^2}} \implies t_{max} = \lceil n_{max}+6\rceil^2 = \left\lceil 205.289+7\right\rceil^2= 45369.
+		\label{eq:ILEBR Hoeffdin t=n^2 and t_min}
+		0.01 =  \sqrt{\frac{\ln(2\nmax/0.05)}{2(\nmax+7)^2}} \implies t_{max} = \lceil \nmax+6\rceil^2 = \left\lceil 205.289+7\right\rceil^2= 45369.
 	\end{gather}
-	Chociaż równanie \ref{eq:ILEBR Hoffdin t=n^2 and t_min} nie zmniejszyło nam maksymalnej liczby testów jakie należy wykonać to pozwoliło nam ono na zmniejszenie $\epsilon_n$. Oznacza to że stosują odroczenie pierwszych testów, pozwala nam na dokładniejsze oszacowanie naszej górnej i dolnej granicy w stosowanych algorytmach.
+	Chociaż wynik równania \eqref{eq:ILEBR Hoeffdin t=n^2 and t_min} nie zmniejszył maksymalnej liczby testów jakie należy wykonać, to pozwolił nam on na zmniejszenie $\epsilon_n$. Oznacza to, że stosując odroczenie pierwszych testów, możemy dokładniej oszacować naszą górną i dolną granicę w stosowanych algorytmach.
 	\begin{algorithm}[H]\captionsetup{labelformat=custom2}
 		\caption{ILEBR* 2}\label{alg:IEBLR* 2}
 		\begin{algorithmic}
 			\Ensure precision $\epsilon$, probability $\delta$ 
 			\State  $ LB \gets 0,\quad UB \gets \infty, \quad n \gets 0 $
-			\State Find $n_{max}$ such as $		\epsilon =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2n_{max}^2}} $
-			\State Find $n_{min}$ such as $		0.5 =  \sqrt{\frac{\ln(2n_{max}/\delta)}{2(n_{min}+1)^2}} $
+			\State Find $\nmax$ such as $		\epsilon =  \sqrt{\frac{\ln(2\nmax/\delta)}{2\nmax^2}} $
+			\State Find $n_{min}$ such as $		0.5 =  \sqrt{\frac{\ln(2\nmax/\delta)}{2(n_{min}+1)^2}} $
 			\State Obtain first $X_1,X_2,X_{n_{min}}$ games 
 			\State $t \gets n_{min}^2$
-			\Statex $\delta_n = \delta/n_{max}$
-			\While{$( UB - LB > 2\epsilon $ or $n \le n_{max})$ and $ (UB > 0.5 \text{ or } LB < 0.5)$}
+			\Statex $\delta_n = \delta/\nmax$
+			\While{$( UB - LB > 2\epsilon $ or $n \le \nmax)$ and $ (UB > 0.5 \text{ or } LB < 0.5)$}
 			\Repeat 
 			\State $t \gets t + 1$
 			\State Obtain $X_t$
-			\Until $t=n^2$
+			\Until $t=(n+n_{min})^2$
 			\State $\epsilon_n \gets \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{(n+n_{min})^2}} + \frac{3  \ln{(3 / \delta_n)}}{(n+n_{min})^2}$ 
 			\State $LB \gets \max(LB,  \overline{X_n} - \epsilon_n)$
 			\State $UB \gets \min(UB,  \overline{X_n} + \epsilon_n)$
@@ -581,34 +591,360 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 			\EndIf
 		\end{algorithmic}
 	\end{algorithm}
-	\section{Moc testów statysytycznych}
-	Mocą testu statystycznego nazywamy prawdopodobienstwo unikniecia popełnenia błędu drugiego rodzaju, czyli prawdopoodbienstwo przyjecie hipotezy zerowej gdy w rzeczywistosci jest ona fałszywa. W naszym przypadku jest to prawdopodobienstwo przyjecia za lepszego gracza osoby o niższym prawdopodobienstiwe wygranej.
-	Wysoka moc testu jest pożadaną własciwoscia testu, jednak żadanie jaknajlepszej mocy może wiazać się z zwiększeniem próby badawczej.
+%	\section{Moc testów statystycznych}
+%	Mocą testu statystycznego nazywamy prawdopodobieństwo uniknięcia popełnienia błędu drugiego rodzaju, czyli prawdopodobieństwo przyjęcia hipotezy zerowej, gdy w rzeczywistości jest ona fałszywa. W naszym przypadku hipoteza ta brzmi następująco:
+%	\begin{itemize}
+%		\item $\text{H}_a$: gracz pierwszy jest lepszy od gracza drugiego.
+%		\item  $\text{H}_b$: gracz drugiego jest lepszy od gracza pierwszego.
+%	\end{itemize}
+%	%!poprawy
+%	%! daj poporaw P oraz n max
+%	Oznacza to, że błędem drugiego rodzaju dla zadanej hipotezy jest prawdopodobieństwo przyjęcia za lepszego gracza osoby o niższym prawdopodobieństwo wygranej.
+%	Wysoka moc testu jest pożądana właściwością testu, jednak moc testu zależy od kilku czynników, w tym od wielkości efektu, który chcemy wykryć, od wielkości próby i od poziomu istotności testu.
+%	
+%	Wyznaczmy zatem prawdopodobieństwo wybrania gorszego gracza. Załóżmy bez straty ogólności, że teoretyczna wartość wygrania gry przez pierwszego gracza jest większa od $0.5$ ($\mu > 0.5$). Wtedy prawdopodobieństwo pomyłki w naszych algorytmach typu ILEBR możemy wyrazić przy pomocy następującego wzoru
+%	\begin{gather}
+%		\label{eq:error probability}
+%		\probP_{\mu}(\overline{X}_{f(\nmax)} \le 0.5) + 1-\prod^{\nmax}_{k=1} \probP_{\mu}(\overline{X}_{f(k)} +  \epsilon_{k} > 0.5) = \alpha,
+%	\end{gather}
+%	gdzie:
+%	\begin{itemize}
+%		\item $\alpha$: Prawdopodobieństwo popełnienia błędu.
+%		\item $f(k)$: Funkcja rozmiaru próby, zależna od liczby przeprowadzonych testów.
+%		\item $\epsilon_k = \overline{\sigma}_k \sqrt{\frac{2\ln(3/\delta_k)}{f(k)}}+\frac{3\ln(3/\delta_k)}{f(k)}$: Zależny od testowanego algorytmu.
+%		\item $\nmax$: Zależny od przyjętych parametrów $\epsilon$ i $\delta$.
+%	\end{itemize}
+%	
+%	Dowód wzoru \eqref{eq:error probability} znajduje sie na końcu niniejszej pracy w \hyperref[proof:error probability]{Dodatku}.
+%	
+%	Wyrażenie \eqref{eq:error probability} możemy rozdzielić na dwa składniki. Pierwszym z nich jest 
+%	\begin{gather}
+%		\alpha_1 = \label{eq:error_a1}
+%		\probP_{\mu}(\overline{X}_{f(\nmax)} \le 0.5).
+%	\end{gather}
+%	Oraz drugi składnik
+%	\begin{gather}
+%		\label{eq:error_a2}
+%		\alpha_2 = 1-\prod^{\nmax}_{k=1} \probP_{\mu}(\overline{X}_{f(k)} +  \epsilon_{k} > 0.5).
+%	\end{gather}
+%	Przyjmując, że $X_i$ jest zmienną losowa z rozkładu zero-jedynkowego otrzymujemy, że $Y_n = \sum_{i=1}^{n}X_i$ jest zmienną losową z rozkładu dwumianowego. Pozwala to nam na zapisanie równań \eqref{eq:error_a1} i \eqref{eq:error_a2} w następujący sposób:
+%	\begin{gather}
+%		\label{eq:error_a1_1}
+%		\alpha_1 = P_{\mu}\left( Y_{f(\nmax)} \le \frac{f(\nmax)}{2} \right), \\
+%		\label{eq:error_a2_1}
+%		\alpha_2 = 1 -\prod_{k=1}^{\nmax} P_{\mu}\left( Y_{f(\nmax)}  > \frac{f(k)}{2} - \overline{\sigma}_{f(k)} \sqrt{2\ln(3/\delta_k)f(k)} - 3  \ln{(3 / \delta_n)} \right).
+%	\end{gather}
+%	Nierówność \eqref{eq:error_a2_1} możemy ograniczyć. Ponieważ chcemy, aby prawdopodobieństwo \newline
+%	$P_{\mu}\left( Y_{f(\nmax)}  \ge \frac{f(k)}{2} - \overline{\sigma}_{f(k)} \sqrt{2\ln(3/\delta_n)f(k)} - 3  \ln{(3 / \delta_n)} \right)$ było jak największe. Zależy nam zatem, aby wyrażenie $\frac{f(k)}{2} - \overline{\sigma}_{f(k)} \sqrt{2\ln(3/\delta_n)f(k)} - 3  \ln{(3 / \delta_n)}$ było jak najmniejsze. Wiedząc, że $\overline{\sigma}_k\le \frac{1}{2}$ uzyskujemy
+%	
+%	\begin{align}
+%		\label{eq:errpr_a2_limit_1}
+%		\alpha_2 \le 1 -\prod_{k=1}^{\nmax} P_{\mu}\left( Y_{f(\nmax)}  > \frac{f(k)}{2} -  \sqrt{\frac{\ln(3/\delta_k)f(k)}{2}} - 3  \ln{(3 / \delta_n)} \right).
+%	\end{align}
+%	Nierówność \eqref{eq:errpr_a2_limit_1} jesteśmy w stanie ograniczyć jeszcze bardziej ze wglądu na fakt że $\delta\in(0, 1]$. Spoglądają na Rysunek \ref{fig:a2_probability} oraz animalizując nierówność \eqref{eq:errpr_a2_limit_1} widzimy, że wraz z wzrostem  parametru $\delta$ wartość prawdopodobieństwa $\alpha_2$ również wzrasta. Oznacza to więc, że jesteśmy w stanie roższeżyć nasze ograniczenie zastąpując $\delta_n = \delta/\nmax$ samym $1/\nmax$
+%	\begin{align}
+%		\label{eq:errpr_a2_limit_2}
+%		\alpha_2 \le 1 -\prod_{k=1}^{\nmax} P_{\mu}\left( Y_{f(\nmax)}  \ge \frac{f(k)}{2} -  \sqrt{\frac{\ln(3\nmax)f(k)}{2}} - 3  \ln{(3\nmax})  \right).
+%	\end{align}
+%	Wynik otrzymany z nierówności \eqref{eq:errpr_a2_limit_2} jest szczególnie istotny, ponieważ ograniczenie to zależny jawnie tylko od parametrów $\mu$ i $\nmax$ !
+%	
+%	Ostatecznie łącząc wyniki otrzymane z \eqref{eq:error_a1_1} i \eqref{eq:errpr_a2_limit_2} otrzymujemy, że dla $\mu > 0.5$
+%	\begin{gather}
+%		F'_{\mu}(\nmax) =  
+%		P_{\mu}\left( Y_{f(\nmax)}  \le \frac{f(\nmax)}{2} \right) + \\ 1 - \prod_{k=1}^{\nmax} P_{\mu}\left( Y_{f(k)}  \ge \frac{f(k)}{2} - \sqrt{\frac{\ln(3\nmax)}{2}f(k)} - 3  \ln{(3 \nmax)}\right), \\
+%		\label{eq:error_a_limit}
+%		F'_{\mu}(\nmax) \le \alpha .
+%	\end{gather}
+%	Ze względu na symetrie rozważanego problemu, nierówność \eqref{eq:error_a_limit} możemy zapisać dla dowolnego $\mu$ w następujący sposób
+%	%? czy dodać 0.5?
+%	
+%	\begin{align}
+%		\label{eq:F_function}
+%		F_{\mu}(\nmax) = 
+%		\begin{cases}
+%			F'_{1-\mu}(\nmax), &\text{dla }  \mu<0.5,\\
+%			0.5, & \text{dla }  \mu=0.5, \\
+%			F'_{\mu}(\nmax), &\text{dla } \mu>0.5.
+%		\end{cases}
+%	\end{align}
+%	%? czy uzycie "roziwania ukadu rowanan" jest poporawne
+%	Funkcja \eqref{eq:F_function} pozwala nam na wyznaczanie mocy dla algorytmów typu ILEBR. Co więcej, przy zadanej wartości początkowej parametru $\epsilon$ jesteśmy w stanie tak dobrać wartość $\delta$, aby zachodziła nierówność $	F_{\mu}(\nmax) \le \alpha$. Taką $\delta$ możemy wyznaczyć poprzez znalezienie rozwalnianie układu równań 
+%	%? czy tutaj ktopka?
+%	\begin{gather}
+%		\label{eq:alpfa_determinant}
+%		\left\{
+%		\begin{split}
+%			\nmax =& \min \left\{n\in \mathbb{N}^+: F_{\mu}(n) \le \alpha \right\}, \\
+%			\delta =&   \cfrac{\exp(2\epsilon^2f(\nmax))}{2\nmax}.
+%		\end{split}
+%		\right. 
+%	\end{gather}
+%	W ramach sprawdzenia wyznaczmy prawdopodobieństwo wyznaczenia złego gracza dla Algorytmu ILEBR* i parametrów początkowych $\mu = 0.497, \delta=0.05, \epsilon=0.01$.
+%	Wtedy:
+%	\begin{gather}
+%		\label{eq:error preparation}
+%		\nmax = 214,\quad
+%		\epsilon_n = \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{n^2}} + \frac{3  \ln{(3 / \delta_n)}}{n^2},\quad
+%		f(n) = n^2,\quad 
+%		\delta_n = \frac{\delta}{\nmax}.
+%	\end{gather}
+%	Podstawiają \eqref{eq:error preparation} do \eqref{eq:F_function} otrzymujemy, że
+%	\begin{gather}
+%		\label{eq:alpha_result}
+%		F_{0.497}(213)  \approx 0.10063 + 0.00025 = 0.10089\le \alpha
+%	\end{gather}
+%	Wynik \eqref{eq:alpha_result} zgadza się z symulacjami dla algorytmu ILEBR* przedstawionymi na Rysunku \ref{fig:test_powrs}.
+%	
+%	Co więcej, możemy również wyznaczyć taką warowność parametru $\delta$, żeby $F_{0.497}(\nmax) \le 0.05$. Aby to uzyskać, znajdziemy $\nmax$ oraz $\delta$ spełniające zależność \eqref{eq:alpfa_determinant} przy ustalonym $\epsilon = 0.01$.
+%	Rozwiązaniem tego problemu przy zadanych parametrach początkowych jest $\nmax = 275, \delta = 0.00014848$. Możemy również zobaczyć, że Rysunku \ref{fig:test_powrs_alpha_0_05} przedstawia zgodność symulacji z teoretycznymi rozważaniami.
+%	\begin{figure}
+%		\centering
+%		\includegraphics[width=0.8\textwidth]{imagens/alpha_2.pdf}
+%		%		\captionsetup{justification=centering}
+%		\caption{Wykres wartości prawdopodobieństwa $\alpha_2$ w zależności od $\mu$, $\delta$ i $\epsilon$ dla algorytmu ILEBR*.}
+%		\label{fig:a2_probability}
+%	\end{figure}
+%	\begin{figure}
+%		\centering
+%		\includegraphics[width=0.8\textwidth]{imagens/test_powrs_alpha_0_05.pdf}
+%		%		\captionsetup{justification=centering}
+%		\caption{Wykres wartości prawdopodobieństwa $\alpha$ w zależności od $\mu$ dla $\delta =0.00014848$, $\epsilon =0.01$ i algorytmu ILEBR*.}
+%		\label{fig:test_powrs_alpha_0_05}
+%	\end{figure}
+%	%zamiast pisac test statystyczzny uzywac problem decyzyjny
+%	%zamiast mocy prawdopodobienstwo błędu
+%	\begin{figure}
+%		\centering
+%		\includegraphics[width=0.8\textwidth]{imagens/test_powrs.pdf}
+%		\caption{Wykres mocy testów statystycznych w zależności od $\mu$ dla $\epsilon=0.01$ i $\delta = 0.05$.}
+%		\label{fig:test_powrs}
+%	\end{figure}
+%	\begin{figure}
+%		\centering
+%		\includegraphics[width=0.8\textwidth]{imagens/needed_games_to_play.pdf}
+%		\caption{Wykres sredniej liczby gier potrzebej do rozegrania w zależności od wartosci oczekiwanej zmiennych losowych  $X_i$ dla $\epsilon=0.01$ i $\delta = 0.05$. Na wykresie widoczne są 4 krzywe poniważ wyniki dla algorytmów ILEBR* i ILEBR* 2 pokrywaja się ze sobą.}
+%		\label{fig:needed_games_to_play}
+%	\end{figure}
+%	\begin{figure}
+%		\captionsetup[subfigure]{width=0.8\textwidth}
+%		\centering
+%		\begin{subfigure}{1\textwidth}
+%			\includegraphics[width=1\linewidth]{imagens/test_powrs_same_n_max.pdf}
+%			\caption{Wykres mocy testów statystycznych w zależności od $\mu$ dla $\epsilon=0.01$.}
+%			\label{fig:power_same_n_max}
+%		\end{subfigure}
+%		\begin{subfigure}{.5\textwidth}
+%			\centering
+%			\includegraphics[width=1\linewidth]{imagens/needed_games_to_play_same_n_max_log.pdf}
+%			\caption{Wykres mocy testów statystycznych w zależności od $\mu$ dla $\epsilon=0.01$ w skali logarytmicznej.}
+%			\label{fig:power_same_n_max_log}
+%		\end{subfigure}%
+%		%! dodaj wykres w skali logarytmicznej
+%		\begin{subfigure}[r]{.5\textwidth}
+%			\centering
+%			\includegraphics[width=1\linewidth]{imagens/needed_games_to_play_same_n_max.pdf}
+%			\caption{Wykres średniej liczby gier potrzebnej do rozegrania w zależności od $\mu$ dla $\epsilon=0.01$.}
+%			\label{fig:game_to_play_same_n_max}
+%		\end{subfigure}
+%		\caption{Porwanie algorytmów LEBR oraz ILEBR*.}
+%		\label{fig:same_n_max}
+%	\end{figure}
+%	
+%	Patrząc wyłączanie na Rysunek \ref{fig:test_powrs} możemy zobaczyć, że wszystkie testu cechują się dobrą mocą i działają bardzo dobrze do memento, gdy jeden z graczy ma prawdopodobieństwo wygranej bliskie 0.495. Dodatkowo obszary ściemnione oznaczają 95\% przedziały ufności.
+%	
+%	Porównując ze sobą wyniki przedstawione na Rysunkach \ref{fig:test_powrs} i \ref{fig:needed_games_to_play} możemy stwierdzić, że testem o
+%	najlepszej mocy jest testo oparty o algorytm LEBR. Wynika to z wielkości próby, jaką wykorzystywana jest w tym algorytmie (patrz Rysunek \ref{fig:needed_games_to_play}), jednak wymaga on bardzo dłużej liczby gier potrzebnych do rozegrania.
+%	Test statystyczny oparty o algorytm ILEBR ma gorsza moc, ale pozwala nam na prawie dwukrotnie zmniejszenie liczby wymaganych gier. Dodatkowo widzimy, że algorytmy  ILEBR 2, ILEBR* i ILEBR* 2 cechują się mocą na takim samym poziomie jednak wersje algorytmy oznaczone * pozwalają nam ograniczenie liczby gier potrzebnej do rozegrania, aby test mógł wyznaczyć lepszego gracza. W poniższej pracy będziemy stosować algorytm ILEBR* 2, ponieważ pozwoli on na znacznie zmniejszenie liczby porównań, jakie będziemy przeprowadzacz w celu wyznaczenia lepszego gracza. 
+%	
+%	
+%	Jednakże, jeśli fakt, że algorytmy oznaczone (*) charakteryzują się niższą mocą od algorytmu LEBR przy takich samych parametrach początkowych, stanowi dla nas problem. 
+%	To możemy łatwo osiągnąć taką samą moc, wystarczy, aby średnie $\nmax$ w obu tych algorytmach były sobie równe.
+%	Analizując wykresu (Rysunek \ref{fig:same_n_max}) widzimy, że przy zachowaniu tej samej mocy, algorytm ILEBR* jest znacznie szybszy niż jego oryginalny odpowiednik. W naszym przypadku algorytm ILEBR* z parametrami początkowymi $\epsilon =0.01, \delta =3.02101484*10^{-11}$ zachowuje taką samą moc jak algorytm LEBR z parametrami początkowymi $\epsilon=0.01, \delta=0.05$.
+%	
+	\section{Prawdopodobieństwo popełnienia błędu}
+		Algorytmy typu LEBR cechują się innym prawdopodobieństwem popełnienia błędu niż klasyczne algorytmy racingowe, ze względu na wprowadzony pramateria $\epsilon$. Zajmijmy się zatem wyznaczeniem tego prawdopodobieństwa w zależności od parametrów początkowych $\delta$ i $\epsilon$ w badanym problemie decyzyjnym. W tym celu wprowadźmy dwie hipotezy odnośnie do graczy:
+	%? czy nie powinno byc dopszczona równość
+	\begin{itemize}
+		\item $\text{H}_a$: Gracz pierwszy jest lepszy od gracza drugiego.
+		\item  $\text{H}_b$: Gracz drugiego jest lepszy od gracza pierwszego.
+	\end{itemize}
+	%!poprawy
+	%! daj poporaw P oraz n max
+	Oznacza to, że prawdopodobieństwem popełnienia błędu w naszym przypadku jest prawdopodobieństwo przyjęcia za lepszego gracza osoby o niższym prawdopodobieństwie wygranej. 
 	
-	%zamiast pisac test statystyczny uzywac problem decyzyjny
+	Oznaczmy prawdopodobieństwo pomyłki w naszych algorytmach typu ILEBR jako $\alpha$. Załóżmy bez straty ogólności, że teoretyczne prawdopodobieństwo wygrania gry przez pierwszego gracza jest większa od $0.5$ ($\mu > 0.5$).  Wtedy $\alpha$ możemy wyrazić przy pomocy następującego wzoru
+	\begin{gather}
+		\label{eq:error probability}
+		\alpha = 1 - \probP_{\mu}(\overline{X}_{f(\nmax)} > 0.5)
+ \prod^{\nmax}_{k=1} \probP_{\mu}(\overline{X}_{f(k)} +  \epsilon_{k} > 0.5),
+	\end{gather}
+	gdzie:
+	\begin{itemize}
+		\item $\alpha$: Prawdopodobieństwo popełnienia błędu.
+		\item $f(k)$: Funkcja rozmiaru próby, zależna od liczby przeprowadzonych testów.
+		\item $\epsilon_k = \overline{\sigma}_k \sqrt{\frac{2\ln(3/\delta_k)}{f(k)}}+\frac{3\ln(3/\delta_k)}{f(k)}$: Zależny od testowanego algorytmu.
+		\item $\nmax$: Zależny od przyjętych parametrów $\epsilon$ i $\delta$.
+	\end{itemize}
+	Dowód wzoru \eqref{eq:error probability} znajduje sie na końcu niniejszej pracy w \hyperref[proof:error probability]{Dodatku}.
+	
+	Wyrażenie \eqref{eq:error probability} pozwala nam określić teoretyczne prawdopodobieństwo wystąpienia pomyłki dla algorytmów typu LEBR. Jednak wzór ten nie pozwala nam w łatwy sposób na wyznaczenie takiej $\delta$, aby prawdopodobieństwo pomyłki nie było większe niż zadane $\alpha$. Aby moc wyznaczyć metodę znajdywania takiej $\delta$ przy zadanym parametrze początkowym $\epsilon$, ograniczmy naszą 
+	$\alpha$ wynikającą z równania \eqref{eq:error probability} 
+	\begin{gather}
+		\label{eq:error_probability_limit_1}
+		\alpha \le
+		  1-\prod^{\nmax}_{k=1} \probP_{\mu}(\overline{X}_{f(k)} +  \epsilon_{k} > 0.5) +
+		 \probP_{\mu}(\overline{X}_{f(\nmax)}\le 0.5).
+	\end{gather}
+	Wyrażenie \eqref{eq:error_probability_limit_1} możemy zapisać przy pomocy dwóch składników. Pierwszym z nich jest 
+	\begin{gather}
+		\alpha_1 = \label{eq:error_a1}
+		\probP_{\mu}(\overline{X}_{f(\nmax)} > 0.5).
+	\end{gather}
+	Oraz drugi składnik
+	\begin{gather}
+		\label{eq:error_a2}
+		\alpha_2 = 1 - \prod^{\nmax}_{k=1} \probP_{\mu}(\overline{X}_{f(k)} +  \epsilon_{k} > 0.5).
+	\end{gather}
+	Przyjmując, że $X_i$ jest zmienną losowa z rozkładu zero-jedynkowego otrzymujemy, że $Y_n = \sum_{i=1}^{n}X_i$ jest zmienną losową z rozkładu dwumianowego. Pozwala to nam na zapisanie równań \eqref{eq:error_a1} i \eqref{eq:error_a2} w następujący sposób:
+	\begin{gather}
+		\label{eq:error_a1_1}
+		\alpha_1 = \probP_{\mu}\left( Y_{f(\nmax)}>  \frac{f(\nmax)}{2} \right), \\
+		\label{eq:error_a2_1}
+		\alpha_2 = 1 - \prod_{k=1}^{\nmax} \probP_{\mu}\left( Y_{f(\nmax)}  > \frac{f(k)}{2} - \overline{\sigma}_{f(k)} \sqrt{2\ln(3/\delta_k)f(k)} - 3  \ln{(3 / \delta_n)} \right).
+	\end{gather}
+	Spoglądają na Rysunek \ref{fig:a2_probability} oraz animalizując wyrażenie \eqref{eq:error_a2_1} możemy zauważyć, że maksymalne $\alpha_2$ osiągane jest dla $\mu = 0.5$, zatem
+	\begin{align}
+		\label{eq:errpr_a2_limit_1}
+		\alpha_2 \ge \prod_{k=1}^{\nmax} \probP_{\mu}\left( Y_{f(\nmax)}  > \frac{f(k)}{2} -  \sqrt{\frac{\ln(3/\delta_k)f(k)}{2}} - 3  \ln{(3 / \delta_n)} \right).
+	\end{align}
+	Nierówność \eqref{eq:errpr_a2_limit_1} jesteśmy w stanie ograniczyć jeszcze bardziej ze wglądu na fakt że $\delta\in(0, 1]$. Spoglądają na Rysunek \ref{fig:a2_probability} oraz animalizując nierówność \eqref{eq:errpr_a2_limit_1} widzimy, że wraz z wzrostem  parametru $\delta$ wartość prawdopodobieństwa $\alpha_2$ również wzrasta. Oznacza to więc, że jesteśmy w stanie rozszerzyć nasze ograniczenie zastępując $\delta_n = \delta/\nmax$ samym $1/\nmax$
+	\begin{align}
+		\label{eq:errpr_a2_limit_2}
+		\alpha_2 \ge \prod_{k=1}^{\nmax} P_{\mu}\left( Y_{f(\nmax)}  > \frac{f(k)}{2} -  \sqrt{\frac{\ln(3\nmax)f(k)}{2}} - 3  \ln{(3\nmax})  \right).
+	\end{align}
+	Wynik otrzymany z nierówności \eqref{eq:errpr_a2_limit_2} jest szczególnie istotny, ponieważ ograniczenie to zależny jawnie tylko od parametrów $\mu$ i $\nmax$ !
+	
+	W ramach uproszenia zapisy wprowadźmy nową funkcje  $F'_{\mu}(\nmax)$ w nietepujący sposób
+	\begin{align}
+		F'_{1}(\nmax) =& P_{\mu}\left( Y_{f(\nmax)}  > \frac{f(\nmax)}{2} \right), \\
+		F'_{2}(\nmax) =& \prod_{k=1}^{\nmax} P_{\mu}\left( Y_{f(k)}  > \frac{f(k)}{2} - \sqrt{\frac{\ln(3\nmax)}{2}f(k)} - 3  \ln{(3 \nmax)}\right), \\
+		\label{eq:error_a_limit}
+		F'_{\mu}(\nmax) =& 1 -F'_{1}(\nmax)F'_{2}(\nmax).
+	\end{align}
+		Ostatecznie łącząc wyniki otrzymane z \eqref{eq:error_a1_1}, \eqref{eq:errpr_a2_limit_2} i \eqref{eq:error_a_limit} otrzymujemy, że dla $\mu > 0.5$
+	\begin{gather}
+		\label{eq:error_a_limit_end}
+		F'_{\mu}(\nmax) \ge \alpha .
+	\end{gather}
+		Ze względu na symetrie rozważanego problemu, nierówność \eqref{eq:error_a_limit_end} możemy zapisać dla dowolnego $\mu$ w następujący sposób
+	\begin{align}
+		\label{eq:F_function}
+		F_{\mu}(\nmax) = 
+		\begin{cases}
+			F'_{1-\mu}(\nmax), &\text{dla }  \mu\le0.5,\\
+			F'_{\mu}(\nmax), &\text{dla } \mu>0.5.
+		\end{cases}
+	\end{align}
+	%? czy uzycie "roziwania ukadu rowanan" jest poporawne
+	Funkcja \eqref{eq:F_function} pozwala nam na wyznaczanie prawdopodobienstwa popoelnienia błędu dla algorytmów typu ILEBR. Co więcej, przy zadanej wartości początkowej parametru $\epsilon$ jesteśmy w stanie tak dobrać wartość $\delta$, aby zachodziła nierówność $	F_{\mu}(\nmax) \ge \alpha$. Taką $\delta$ możemy wyznaczyć poprzez znalezienie rozwalnianie układu równań 
+	%? czy tutaj ktopka?
+	\begin{gather}
+		\label{eq:alpfa_determinant}
+		\left\{
+		\begin{split}
+			\nmax =& \min \left\{n\in \mathbb{N}^+: F_{\mu}(n) < \alpha \right\}, \\
+			\delta =&   \cfrac{\exp(2\epsilon^2f(\nmax))}{2\nmax}.
+		\end{split}
+		\right. 
+	\end{gather}
+	W ramach sprawdzenia wyznaczmy prawdopodobieństwo wyznaczenia złego gracza dla Algorytmu ILEBR* i parametrów początkowych $\mu = 0.497, \delta=0.05, \epsilon=0.01$.
+	Wtedy:
+	\begin{gather}
+		\label{eq:error preparation}
+		\nmax = 213,\quad
+		 \epsilon_n = \overline{\sigma}_n \sqrt{\frac{2\ln(3/\delta_n)}{n^2}} + \frac{3  \ln{(3 / \delta_n)}}{n^2},\quad
+		  f(n) = n^2,\quad 
+		  \delta_n = \frac{\delta}{\nmax}.
+	\end{gather}
+	Podstawiają \eqref{eq:error preparation} do \eqref{eq:F_function} otrzymujemy, że
+	\begin{gather}
+		\label{eq:alpha_result}
+		F_{0.497}(213)  \approx 0.10084 \ge \alpha
+	\end{gather}
+	Wynik \eqref{eq:alpha_result} zgadza się z symulacjami dla algorytmu ILEBR* przedstawionymi na Rysunku \ref{fig:test_powrs}.
+	
+	Co więcej, możemy również wyznaczyć taką warowność parametru $\delta$, żeby $F_{0.497}(\nmax) \le 0.05$. Aby to uzyskać, znajdziemy $\nmax$ oraz $\delta$ spełniające zależność \eqref{eq:alpfa_determinant} przy ustalonym $\epsilon = 0.01$.
+	Rozwiązaniem tego problemu przy zadanych parametrach początkowych jest $\nmax = 275, \delta = 0.00014848$. Możemy również zobaczyć, że Rysunku \ref{fig:test_powrs_alpha_0_05} przedstawia zgodność symulacji z teoretycznymi rozważaniami.
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\textwidth]{imagens/alpha_2.pdf}
+		%		\captionsetup{justification=centering}
+		\caption{Wykres wartości prawdopodobieństwa $\alpha_2$ w zależności od $\mu$, $\delta$ i $\epsilon$ dla algorytmu ILEBR*.}
+		\label{fig:a2_probability}
+	\end{figure}
+
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\textwidth]{imagens/test_powrs_alpha_0_05.pdf}
+		%		\captionsetup{justification=centering}
+		\caption{Wykres wartości prawdopodobieństwa $\alpha$ w zależności od $\mu$ dla $\delta =0.00014848$, $\epsilon =0.01$ i algorytmu ILEBR*.}
+		\label{fig:test_powrs_alpha_0_05}
+	\end{figure}
+	%zamiast pisac test statystyczzny uzywac problem decyzyjny
 	%zamiast mocy prawdopodobienstwo błędu
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.7\textwidth]{imagens/test_powrs.pdf}
-		\caption{Wykres mocy testów statystycznych w zależności od wartosci oczekiwanej zmiennych losowych  $X_i$ dla $\epsilon=0.01$ i $\delta = 0.05$.}
+		\includegraphics[width=0.8\textwidth]{imagens/test_powrs.pdf}
+		\caption{Wykres prawdopodobieństwa pomyłki w zależności od $\mu$ dla $\epsilon=0.01$ i $\delta = 0.05$.}
 		\label{fig:test_powrs}
 	\end{figure}
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.7\textwidth]{imagens/needed_games_to_play.pdf}
-		\caption{Wykres sredniej liczby gier potrzebej do rozegrania w zależności od wartosci oczekiwanej zmiennych losowych  $X_i$ dla $\epsilon=0.01$ i $\delta = 0.05$.}
+		\includegraphics[width=0.8\textwidth]{imagens/needed_games_to_play.pdf}
+		\caption{Wykres sredniej liczby gier potrzebej do rozegrania w zależności od wartosci oczekiwanej zmiennych losowych  $X_i$ dla $\epsilon=0.01$ i $\delta = 0.05$. Na wykresie widoczne są 4 krzywe poniważ wyniki dla algorytmów ILEBR* i ILEBR* 2 pokrywaja się ze sobą.}
 		\label{fig:needed_games_to_play}
 	\end{figure}
-	Patrząc wyłączanie na Rysunek \ref{fig:test_powrs} możemy zobaczyć że wszystkie testu czują się dobrą mocą i działają bardzo dobrze do memento gdy jeden z graczy ma prawdopodobieństwo wygranej bliskie 0.495. Dodatkowo obszary ściemnione oznaczają 95\% przedziały ufności.
-	
-	
+	\begin{figure}
+		\captionsetup[subfigure]{width=0.8\textwidth}
+		\centering
+		\begin{subfigure}{1\textwidth}
+			\includegraphics[width=1\linewidth]{imagens/test_powrs_same_n_max.pdf}
+			\caption{Wykres prawdopodobieństwa pomyłki w zależności od $\mu$ dla $\epsilon=0.01$.}
+			\label{fig:power_same_n_max}
+		\end{subfigure}
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[width=1\linewidth]{imagens/needed_games_to_play_same_n_max_log.pdf}
+			\caption{Wykres prawdopodobieństwa pomyłki w zależności od $\mu$ dla $\epsilon=0.01$ w skali logarytmicznej.}
+			\label{fig:power_same_n_max_log}
+		\end{subfigure}%
+		%! dodaj wykres w skali logarytmicznej
+		\begin{subfigure}[r]{.5\textwidth}
+			\centering
+			\includegraphics[width=1\linewidth]{imagens/needed_games_to_play_same_n_max.pdf}
+			\caption{Wykres średniej liczby gier potrzebnej do rozegrania w zależności od $\mu$ dla $\epsilon=0.01$.}
+			\label{fig:game_to_play_same_n_max}
+		\end{subfigure}
+		\caption{Porwanie algorytmów LEBR oraz ILEBR*.}
+		\label{fig:same_n_max}
+	\end{figure}
+
+	Patrząc wyłączanie na Rysunek \ref{fig:test_powrs} możemy zobaczyć, że wszystkie testu cechują się dobrą mocą i działają bardzo dobrze do memento, gdy jeden z graczy ma prawdopodobieństwo wygranej bliskie 0.495. Dodatkowo obszary ściemnione oznaczają 95\% przedziały ufności.
+
 	Porównując ze sobą wyniki przedstawione na Rysunkach \ref{fig:test_powrs} i \ref{fig:needed_games_to_play} możemy stwierdzić, że testem o
-	najlepszej mocy jest testo oparty o algorytm LEBR, jednak wymaga on bardo dłużej liczby gier potrzebnych do rozegrania.
-	Test statystyczny oparty o algorytm ILEBR ma gorsza moc ale pozwala nam na prawie dwukrotnie zmniejszenie liczby wymaganych gier. Dodatkowo widzimy że algorytmy  ILEBR 2, ILEBR* i ILEBR* 2 cechują się mocą na bardzo podobnym poziomie jednak wersje algorytmy oznaczone * pozwalają nam bardo duże ograniczenie liczby gier potrzebnej do rozegrania aby test mógł wyznaczyć lepszego gracza. W poniższej pracy będziemy stosować algorytm ILEBR* 2 ponieważ pozwoli on na znacznie niezwieszenie liczby porównań jakie będziemy przeprowadzacz w celu wyznaczenia lepszego gracza. 
+	najlepszej mocy jest testo oparty o algorytm LEBR. Wynika to z wielkości próby, jaką wykorzystywana jest w tym algorytmie (patrz Rysunek \ref{fig:needed_games_to_play}), jednak wymaga on bardzo dłużej liczby gier potrzebnych do rozegrania.
+	Test statystyczny oparty o algorytm ILEBR ma gorsza moc, ale pozwala nam na prawie dwukrotnie zmniejszenie liczby wymaganych gier. Dodatkowo widzimy, że algorytmy  ILEBR 2, ILEBR* i ILEBR* 2 cechują się mocą na takim samym poziomie jednak wersje algorytmy oznaczone * pozwalają nam ograniczenie liczby gier potrzebnej do rozegrania, aby test mógł wyznaczyć lepszego gracza. W poniższej pracy będziemy stosować algorytm ILEBR* 2, ponieważ pozwoli on na znacznie zmniejszenie liczby porównań, jakie będziemy przeprowadzacz w celu wyznaczenia lepszego gracza. 
+	
+	
+	Jednakże, jeśli fakt, że algorytmy oznaczone (*) charakteryzują się niższą mocą od algorytmu LEBR przy takich samych parametrach początkowych, stanowi dla nas problem. 
+	To możemy łatwo osiągnąć taką samą moc, wystarczy, aby średnie $\nmax$ w obu tych algorytmach były sobie równe.
+	Analizując wykresu (Rysunek \ref{fig:same_n_max}) widzimy, że przy zachowaniu tej samej mocy, algorytm ILEBR* jest znacznie szybszy niż jego oryginalny odpowiednik. W naszym przypadku algorytm ILEBR* z parametrami początkowymi $\epsilon =0.01, \delta =3.02101484*10^{-11}$ zachowuje taką samą moc jak algorytm LEBR z parametrami początkowymi $\epsilon=0.01, \delta=0.05$.
+
+	
 	
 	\section{Algorytmy wyznaczania optymalnej strategi}
 	Wszystkie algorytmy przedstawione w tym rozdziale są algorytmami genetycznymi \cite{Figielska2006}. 
-	Algorytm generacyjny to sposób tworzenia nowych rozwiązań dla danego problemu poprzez iteracyjne stosowanie procesu ewolucyjnego. W tym procesie tworzone są nowe rozwiązania, oceniane ich jakość i wybierane najlepsze z nich, aby stworzyć kolejną generację rozwiązań. Ten proces powtarza się, aż zostanie znalezione rozwiązanie spełniające określone kryteria. Algorytm generacyjny może być używany do rozwiązywania różnych rodzajów problemów, takich jak optymalizacja, uczenie maszynowe, tworzenie sztucznej inteligencji i wiele innych. Algorytmy ewolucyjne są często interpretowane jako odwzorowanie procesu ewolucyjnego w naturze, ze względu na swoje odpodobnienie do procesu selekcji naturalnej w którym najlepsze jednostki są wybierane do reprodukcji i tworzenia nowych pokoleń.
+	Algorytm generacyjny to sposób tworzenia nowych rozwiązań dla danego problemu poprzez iteracyjne stosowanie procesu ewolucyjnego. W tym procesie tworzone są nowe rozwiązania, oceniane ich jakość i wybierane najlepsze z nich, aby stworzyć kolejną generację rozwiązań. Ten proces powtarza się, aż zostanie znalezione rozwiązanie spełniające określone kryteria. Algorytm generacyjny może być używany do rozwiązywania różnych rodzajów problemów, takich jak optymalizacja, uczenie maszynowe, tworzenie sztucznej inteligencji i wiele innych. Algorytmy ewolucyjne są często interpretowane jako odwzorowanie procesu ewolucyjnego w naturze, ze względu na swoje odpodobnienie do procesu selekcji naturalnej, w którym najlepsze jednostki są wybierane do reprodukcji i tworzenia nowych pokoleń.
 	
 	Ogólnie rzecz biorąc, algorytm generacyjny składa się z kilku kluczowych kroków:
 	\begin{itemize}
@@ -619,12 +955,11 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 		\item Mutacja: Losowa zmiana jednego lub więcej elementów w nowych rozwiązaniach, aby zapewnić różnorodność w następnej generacji.
 		\item Powtarzanie: Powtarzanie kroków 2-5, aż zostanie znalezione rozwiązanie spełniające określone kryteria jakości lub osiągnięty zostanie maksymalny poziom iteracji.
 	\end{itemize}	
-	Proces znajdowania potencjalnych rozwiązań polega na przeszukiwaniu przestrzeni wszystkich możliwych rozwiązań i wybieraniu tych, które dają najlepsze wyniki. W rzeczywistości jednak często nie mamy fizycznej możliwości sprawdzenia wszystkich możliwych rozwiązań lub ich sprawdzenie jest zbyt czasochłonne lub kosztowne. Dlatego w algorytmach ewolucyjnych często wykorzystuje się techniki probabilistyczne, które pomagają wybierać, tworzyć i wyszukiwać kolejne rozwiązania.
+	Proces znajdowania potencjalnych rozwiązań polega na przeszukiwaniu przestrzeni wszystkich możliwych rozwiązań i wybieraniu tych, które dają najlepsze wyniki. W rzeczywistości jednak często nie mamy fizycznej możliwości sprawdzenia wszystkich możliwych rozwiązań lub ich sprawdzenie jest zbyt czasochłonne bądź kosztowne. Dlatego w algorytmach ewolucyjnych często wykorzystuje się techniki probabilistyczne, które pomagają wybierać, tworzyć i wyszukiwać kolejne rozwiązania.
 	
-	W niniejszej pracy zaprezentujemy 4 algorytmy, których celem jest znalezienie optymalnej strategii. Trzy pierwsze algorytmy zostaną opisane na podstawie pracy \cite{cauwet2018surprising}]. Czwartym algorytmem jest proponowana przeze mnie metoda, która jest bardzo podobna do algorytmu trzeciego (patrz [referencja]). Opis tego algorytmu zostanie przedstawiony w dalszej części pracy.
-
-	\subsection{Argorytm itereacyjny}
-		Pierwszym algorytmem, który zostanie przedstawiony, jest algorytm iteracyjny. Jest to metoda bardzo intuicyjna, opierająca się na stopniowym zwiększaniu skuteczności strategii graczy poprzez porównywanie ich wyników. Gdy znajdziemy strategię, która daje lepsze wyniki niż ta poprzednia, staje się ona nowym punktem odniesienia (baseline). W oparciu o tę nową strategię algorytm będzie kontynuować proces optymalizacji wyników graczy. Nowa strategia jest akceptowana, jeśli wygrywa ona z prawdopodobieństwem większym niż 50\% w porównaniu do poprzedniej strategii. Algorytm \ref{alg:Iterative} jest przykładem algorytmem ewolucyjnym typu (1+1) \cite{droste1998rigorous}.
+	W niniejszej pracy zaprezentujemy 4 algorytmy, których celem jest znalezienie optymalnej strategii. Trzy pierwsze algorytmy zostaną opisane na podstawie pracy \cite{cauwet2018surprising}. Czwartym algorytmem jest proponowana przeze mnie metoda, która jest bardzo podobna do Algorytmu \ref{alg:Approximate_Coevolution}. Opis tego algorytmu zostanie przedstawiony w dalszej części pracy.
+	\subsection{Algorytm iteracyjny}
+		Pierwszym algorytmem, który zostanie przedstawiony, jest algorytm iteracyjny. Jest to metoda bardzo intuicyjna, opierająca się na stopniowym zwiększaniu skuteczności strategii graczy poprzez porównywanie ich wyników. Gdy znajdziemy strategię, która daje lepsze wyniki niż ta poprzednia, staje się ona nowym punktem odniesienia (baseline). Na jej podstawie algorytm będzie kontynuować proces optymalizacji wyników graczy. Nowa strategia jest akceptowana, jeśli wygrywa ona z prawdopodobieństwem większym niż 50\% w porównaniu do poprzedniej strategii. Algorytm \ref{alg:Iterative} jest przykładem algorytmem ewolucyjnym typu (1+1) \cite{droste1998rigorous}.
 		\begin{algorithm}\captionsetup{labelformat=custom2}
 			\caption{Iterative algorithm}\label{alg:Iterative}
 			\begin{algorithmic}
@@ -647,10 +982,8 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 				\State \Return an approximation x of the optimal strategy
 			\end{algorithmic}
 		\end{algorithm}
-
 	\subsection{Real Coevolution algorytm}	
 	Kolejnym algorytmem ewolucyjnym, którego będziemy używać, jest algorytm koewolucyjny. W przypadku tej metody nowy punkt odniesienia jest wybierany w momencie, gdy nowo znaleziona strategia okazuje się lepsza niż wszystkie dotychczas wybrane strategie. Pseudokod algorytmu koewolucyjnego został przedstawiony jako Algorytm \ref{alg:Coevolution}. 
-
 	\begin{algorithm}\captionsetup{labelformat=custom2}
 		\caption{Real Coevolution}\label{alg:Coevolution}
 		\begin{algorithmic}
@@ -677,9 +1010,8 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 			\State \Return an approximation x of the optimal strategy
 		\end{algorithmic}
 	\end{algorithm}
-
-	\subsection{Aproxx Coevolution 1 algorytm}
-	W przypadku dwóch poprzednich algorytmów nowe rozwiązanie jest tworzone na podstawie poprzednio znalezionego rozwiązania. Możemy jednak zastosować tzw. ''podejście Paryskie'' (Parisian approach). W tym podejściu zamiast porównywać nowo uzyskaną strategię z każdą poprzednio przyjętą, porównujemy ją tylko z jedną losowo wybraną strategią z populacji. Pseudokod algorytmu koewolucyjnego został przedstawiony jako Algorytm \ref{alg:Approximate_Coevolution}. 
+	\subsection{Approx Coevolution 1 algorytm}
+	W przypadku dwóch poprzednich algorytmów nowe rozwiązanie jest tworzone na podstawie poprzednio znalezionego rozwiązania. Możemy jednak zastosować tzw. ''podejście Paryskie'' (Parisian approach)\cite{Collet_2000}. W tym podejściu, zamiast porównywać nowo uzyskaną strategię z każdą poprzednio przyjętą, porównujemy ją tylko z jedną losowo wybraną strategią z populacji. Pseudokod algorytmu koewolucyjnego został przedstawiony jako Algorytm \ref{alg:Approximate_Coevolution}. 
 	\begin{algorithm}\captionsetup{labelformat=custom2}
 		\caption{Approximate Coevolution}\label{alg:Approximate_Coevolution}
 		\begin{algorithmic}
@@ -706,9 +1038,8 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 		\end{algorithmic}
 	\end{algorithm}
 	
-	\subsection{Aproxx Coevolution 2 algorytm}
-	Ostatnim algorytmem, którym się zajmiemy, jest kolejny algorytm koewolucyjny. Tym razem, zamiast porównywać naszą strategię z jedną losowo wybraną strategią z populacji, tak jak to robiliśmy w przypadku Algorytmu \ref{alg:Approximate_Coevolution}, nasza strategia będzie testowana przeciwko losowo wybranemu przeciwnikowi.Pseudokod algorytmu koewolucyjnego został przedstawiony jako Algorytm \ref{alg:Approximate_Coevolution_2}. 
-
+	\subsection{Approx Coevolution 2 algorytm}
+	Ostatnim algorytmem, którym się zajmiemy, jest kolejny algorytm koewolucyjny. Tym razem, zamiast porównywać naszą strategię z jedną losowo wybraną strategią z populacji, tak jak to robiliśmy w przypadku Algorytmu \ref{alg:Approximate_Coevolution}, nasza strategia będzie testowana przeciwko losowo wybranemu przeciwnikowi. Pseudokod algorytmu koewolucyjnego został przedstawiony jako Algorytm \ref{alg:Approximate_Coevolution_2}. 
 	\begin{algorithm}\captionsetup{labelformat=custom2}
 		\caption{Approximate Coevolution 2}\label{alg:Approximate_Coevolution_2}
 		\begin{algorithmic}
@@ -734,7 +1065,7 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 	\end{algorithm}
 	
 	\chapter{Gry}
-	"Aby sprawdzić poprawność działania powyższych algorytmów, przetestujemy je na podstawie dwóch gier. Pierwszą z nich będzie popularna gra karciana zwana Wojną. Drugą grą, w której będziemy szukać optymalnej strategii, będzie gra o nazwie Rrrats. Przedstawmy najpierw zasady obowiązujące w obu tych grach.
+	Aby sprawdzić poprawność działania powyższych algorytmów, przetestujemy je na podstawie dwóch gier. Pierwszą z nich będzie popularna gra karciana zwana Wojną. Drugą grą, w której będziemy szukać optymalnej strategii, będzie gra o nazwie Rrrats. Przedstawmy najpierw zasady obowiązujące w obu tych grach.
 
 	\section{Gra w wojnę}
 	Wojna to prosta gra karciana, w której uczestnicy grają przeciwko sobie i używają talii standardowych kart do gry. Celem gry jest zdobycie wszystkich kart od przeciwnika.
@@ -745,14 +1076,14 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 		
 		\item Następnie jedna karta jest odkrywana z każdego magazynu i porównywana ze sobą. Gracz, który ma kartę o wyższej wartości, zabiera obie karty i dokłada je na koniec swojego magazynu. Jeśli karty są takie same, gracze rozgrywają "wojnę".
 		
-		\item W przy wojny, oboje gracze wykładają z magazynów najpierw jedną kartę rewersem do góry, a następnie odkrywają kolejną kartę rewersem do dołu. Ten gracz, który ma kartę o wyższej wartości, zabiera wszystkie karty i dokłada je do swojego magazynu. Jeśli karty są takie same, proces powtarza się, aż do momentu gdy jeden z graczy wygra.
+		\item Przy wojnie, obaj gracze wykładają z magazynów najpierw jedną kartę rewersem do góry, a następnie odkrywają kolejną kartę rewersem do dołu. Ten gracz, który ma kartę o wyższej wartości, zabiera wszystkie karty i dokłada je do swojego magazynu. Jeśli karty są takie same, proces powtarza się, aż do momentu, gdy jeden z graczy wygra.
 		
-		\item Gra kończy się w monecie któryś z graczy wygra wszystkie karty.
+		\item Gra kończy się w monecie, gdy któryś z graczy wygra wszystkie karty.
 	\end{itemize}
 	Same zasady gry nie definiują jednak tego w jaki sposób karty na koniec naszego "magazynu" mogą zostać umieszczane.
 	
-	Wprowadźmy zatem 3 parametry nazwijmy je odpowiednio $A,\:B,\:C$, których będziemy używać do wyznaczania nieujemnych parametrów $\alpha = \exp(A),\: \
-	\beta= \exp(B),\: \gamma= \exp(C)$. Wtedy, umieśćmy $k$ wygranych kart na końcu naszego "magazynu" niestepujący sposób:
+	Wprowadźmy zatem 3 parametry nazwijmy je odpowiednio $A, B, C$, których będziemy używać do wyznaczania nieujemnych parametrów $\alpha = \exp(A), \
+	\beta= \exp(B), \gamma= \exp(C)$. Wtedy, umieśćmy $k$ wygranych kart na końcu naszego "magazynu" niestepujący sposób:
 	\begin{itemize}
 		\item karty w kolejności malejącej z prawdopodobieństwem równym $\alpha/(\alpha+\beta+\gamma)$ 
 		
@@ -762,53 +1093,52 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 	\end{itemize}
 	
 	\section{Rrrats!}
-	Rrrats jest prosta grą kościaną typu ekstensywnego, a jej celem jest zdobycie przez poszczególnego gracza najwierniejszej liczby punktów. W każdej swojej turze gracz rzuca dwiema takomskim, aż do momentu gdy zostanie spełniony warunek stopu, bądź sam uzna że nie chce już konturować. Gra kończy się w momencie gdy z głównego stosu znikną wszystkie 31 żetonów (punktów). W grze ożywa się specjalnych których prawdopodobieństw uzyskania otwarci $0,\:1,\:2$ wynosi odnowienie $3/6,\:2/6,\:1/6$.
-	
-	Zasady gry sa następujące:
+	Rrrats jest prostą grą kościaną typu ekstensywnego, a jej celem jest zdobycie przez poszczególnego gracza najwierniejszej liczby punktów. W każdej swojej turze gracz rzuca dwiema takomskim, aż do momentu, gdy zostanie spełniony warunek stopu, bądź sam uzna, że nie chce już konturować. Gra kończy się w momencie, gdy z głównego stosu znikną wszystkie 31 żetonów (punktów). W grze ożywa się specjalnych których prawdopodobieństw uzyskania otwarci $0, 1, 2$ wynosi odnowienie $3/6, 2/6, 1/6$.
+
+	Zasady gry są następujące:
 	\begin{itemize}[]
 		\item Grac w swojej turze może rzucić dwoma kosterskimi dowolną ilość razy
 		\item  Gracz wykonuje następujące akcje w zależności od uzyskanego wyniku:
 		\begin{enumerate}
-			\item[a)] Jeśli na kostce wypadło 1, gracz bierze do "reki" żeton z stosu głównego.
-			\item[b)] Jeśli wypadło 2, gracz kranie punkt przeciwnikowi i bierze go do swojej "reki". Jeśli to nie możliwe gracz bierze punkt z stosu głównego. 
+			\item[a)] Jeśli na kostce wypadło 1, gracz bierze do "reki" żeton ze stosu głównego.
+			\item[b)] Jeśli wypadło 2, gracz kranie punkt przeciwnikowi i bierze go do swojej "reki". Jeśli to nie możliwe gracz bierze punkt ze stosu głównego. 
 			\item[c)] Jeśli upadło 0, nic się nie dzieje.
-			\item[d)] Jeśli na obu kostkach wypadło 0, gracz kończy swoją turę i odkłada wszystkie punkty jakie ma w "ręce".
+			\item[d)] Jeśli na obu kostkach wypadło 0, gracz kończy swoją turę i odkłada wszystkie punkty, jakie ma w "ręce".
 			\begin{description}
-				\item[Przykład:] Jeśli na kostkach wypadnie 0 i 1 gracz pobiera 1 punkt ze stosu głowniowe. Jeśli an kostkach wypadnie 1 i 1 gracz pobiera 2 punkty ze stosu głównego. 
+				\item[Przykład:] Jeśli na kostkach wypadnie 0 i 1 gracz pobiera 1 punkt ze stosu głowniowe. Jeśli an kostkach wypadnie 1 i 1 gracz pobiera 2 punkty ze stosu głównego. Jeśli an kostkach wypadnie 1 i 2 gracz pobiera 1 punkty ze stosu głównego i kradnie jeden punkt przeciwnikowi. 
 			\end{description}		
 		\end{enumerate}
-		\item Po każdym żucie gracz decyduje się na to czy grac dalej, czy zakończyć swoja torę.
+		\item Po każdym żucie gracz decyduje się na to, czy grac dalej, czy zakończyć swoja torę.
 		
-		\item Jeśli gracz ma więcej niż 4 punktów w "rece" tura gracza automatycznie się kończy a uzyskaną nadwyżkę odkłada się do stosu głównego.
+		\item Jeśli gracz ma więcej niż 4 punkty w "rece" tura gracza automatycznie się kończy, a uzyskaną nadwyżkę odkłada się do stosu głównego.
 		
 		\item Jeśli tura dobiegła końca, to gracz przenośni wszystkie punkty uzyskane na "ręce" do swojej puli puntów osobistych.
 		
-		\item Gra kończy się w momencie gdy liczba punktów na głowy stosie wyniesie 0.
+		\item Gra kończy się w momencie, gdy liczba punktów na głowy stosie wyniesie 0.
 	\end{itemize}
-
-		W tym przypadku strategia której będziemy szukać będzie oparta o 8 parametrów $A_1,\: A_2, B_1,\: B_2, C_1,\: C_2, D_1,\: D_2$. Przy pomocy tych paramentów wyznaczymy kolejne 8 współczynników 
-		$
-		\alpha_1 = \exp(A_1),\:
-		\alpha_2 = \exp(A_2), 
-		\beta_1= \exp(B_1),\: 
-		\beta_2= \exp(B_2), 
-		\gamma_1= \exp(C_1),\: 
-		\gamma_2= \exp(C_2)
-		$. Naszym celem jest wyznaczenie prawdopodobieństwa zdecydowania się na dalszy rzut kośćmi w zależność od ilości punktów posiadanych na "ręce". Wprowadźmy zatem  zmienna losowa $Y|K=k,\: k=\{1, 2, 3\}$. Posłuży ona  nam do wyznaczenia prawdopodobieństwo zdecydował się na dalszy rzut kośćmi ($Y=1$) w zależności od ilości posiadanych punktów na "rece". 
-		
-		Same prawdopodobieństwa wprowadzonej ziemnej losowej określamy w następujący sposób:  
-		\begin{gather*}
-			 P(Y = 1|K=1) = \alpha_1/(\alpha_1+\alpha_2),\\
-			 P(Y = 1|K=2) = \beta_1/(\beta_1+\beta_2),\\
-			 P(Y = 1|K=3) = \gamma_1/(\gamma_1+\gamma_2). 
-		\end{gather*}
+	W tym przypadku strategia, której będziemy szukać będzie oparta o 8 parametrów $A_1, A_2, B_1, B_2, C_1, C_2, D_1, D_2$. Przy pomocy tych paramentów wyznaczymy kolejne 8 współczynników 
+	$
+	\alpha_1 = \exp(A_1),
+	\alpha_2 = \exp(A_2), 
+	\beta_1= \exp(B_1), 
+	\beta_2= \exp(B_2), 
+	\gamma_1= \exp(C_1), 
+	\gamma_2= \exp(C_2)$. 
+	Naszym celem jest wyznaczenie prawdopodobieństwa zdecydowania się na dalszy rzut kośćmi w zależności od ilości punktów posiadanych na "ręce". Wprowadźmy zatem  zmienna losowa $Y|K=k, k=\{1, 2, 3\}$. Posłuży ona  nam do wyznaczenia prawdopodobieństwo, że gracz zdecydował się na dalszy rzut kośćmi ($Y=1$) w zależności od ilości posiadanych punktów na "rece".  Prawdopodobieństwa wprowadzonej ziemnej losowej określamy w następujący sposób:  
+	\begin{gather*}
+	 \probP(Y = 1|K=1) = \alpha_1/(\alpha_1+\alpha_2),\\
+	 \probP(Y = 1|K=2) = \beta_1/(\beta_1+\beta_2),\\
+	 \probP(Y = 1|K=3) = \gamma_1/(\gamma_1+\gamma_2). 
+	\end{gather*}
 
 
 	
-	\chapter{Wyniki}
-	Do przedstawienia wyników dziania przedstawionych algorytmów ożyjemy dwóch. Pierwsza z nich będzie tabela obrazująca prawdopodobieństwo granej strategi uzyskanych przez jazdy z algorytmów przeciwko strategi pocztowej. Droga tabele zobrazuje natomiast wyniki działania naszych strategii przeciwko strategią uzyskanym przez pozostałe algorytmy.
-	Wyniki przedstawione na Tabelach \ref{table:war_results} i \ref{table:rrrats_results} oraz Rysunkach \ref{fig:war_results} i \ref{fig:rrrats_results} pokakują, że kazdemu z naszych alkorytmów odało sie zdaleśc strategie dającą sredio wikszy winnik od losowej strategi poczatkowej. Dodatkowo wyzaczone straetegie możemy zinterpretowac interpretować wprosty do zlozymnienia dla człowieka sposób.
-	W grze wojnnie istnieje strategia prosta, jest nią ukłądanie kart zawse w kolejnosci od nawiekszej do najmniejszej. Dodatkowo strategia ta ma 70\% szans na wygranie przeciwko straetgi ukłądania kart w sposób malejaćy, oraz 53\% szans na wygranie przeciwko strategi losowej.
+	\chapter{Wyniki działania algorytmów dla gier}
+	Do przedstawienia wyników dziania przedstawionych algorytmów ożyjemy dwóch. Pierwsza z nich będzie tabela obrazująca prawdopodobieństwo granej strategi uzyskanych przez jazdy z algorytmów przeciwko strategii początkowej.
+%	 Droga tabele zobrazuje natomiast wyniki działania naszych strategii przeciwko strategią uzyskanym przez pozostałe algorytmy.
+	Wyniki przedstawione na Tabelach \ref{table:war_results} i \ref{table:rrrats_results} oraz Rysunkach \ref{fig:war_results} i \ref{fig:rrrats_results} pokazują, że każdemu z naszych algorytmów udało się znaleźć strategie dającą średnio wieży winnik od losowej strategi początkowej. Dodatkowo wyznaczone strategię możemy  interpretować w prosty do zrozumienia dla człowieka sposób.
+	W grze wojnie istnieje strategia prosta, jest nią układanie kart zawsze w kolejności od największej do najmniejszej. Dodatkowo strategia ta ma 70\% szans na wygranie przeciwko strategi układania kart w sposób malejący oraz 53\% szans na wygranie przeciwko strategii losowej.
+	Podobnie dla gry Rrrats, algorytmom udało znaleźć się strategię optymalną, patrząc na wyniki z wykresu \ref{fig:rrrats_results} pozwala na  ona duże zwiększenie prawdopodobieństwa wygranej. Strategia ta opiera się na kończeniu tury gracza w momencie, gdy uzyska on co najmniej 2 punkty.
 	\begin{table}[h]
 		\begin{center}
 			\begin{tabular}{lrrrr}
@@ -824,7 +1154,7 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 				max   &    0.556100 &     0.556700 &             0.542200 &               0.540100 \\
 				\bottomrule
 			\end{tabular}
-			\caption{Rezultaty uzyskanych strategi przeciwko strategi poczatkowej dla gry Rrrats!.}
+			\caption{Rezultaty uzyskanych strategi przeciwko strategii początkowej dla gry Rrrats!.}
 			\label{table:war_results}
 		\end{center}
 	\end{table}
@@ -867,36 +1197,8 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 
 
 	\newpage
-	\section{ernstein race without maximum race length}
-	Wykorzystując Lemat~\ref{Bernsteina emp ineq lemma} oraz korektę \ref{korekta 2} z $\delta_k=\frac{c\delta}{k^2}, c=\frac{6}{\pi^2}$ otrzymujemy, że dla ciągu $X_1,X_2,\dots,X_t$ i.i.d. zmiennych losowych takim, że  $0 \le X_i \le 1$ 
-	\begin{align*}
-		\label{Bernstein race without maximum race length}
-		\epsilon_{t,k} \le \overline{\sigma}_t \sqrt{\frac{2\ln(3/\delta_k)}{t}} + \frac{3  \ln{(3 / \delta_k)}}{t} =
-		\overline{\sigma}_t\sqrt{\frac{2\ln(\frac{k^2\pi^2}{2\delta})}{t}} + \frac{3  \ln{(\frac{k^2\pi^2}{2\delta})}}{t}
-	\end{align*}
-	Wtedy $e_{t,k}$ interpretujemy jako maksymalną różnicę między empiryczną a teoretyczną wartością oczekiwaną po przeprowadzeniu $k$ testów i rozegraniu $t$ gier, z prawdopodobieństwem pomyłki równym 
-	\begin{lemma}
-		\label{lemma Bernstein race without maximum race length}
-		Niech liczba rozegranych gier będzie funkcja zależną od k ($f(k) = t$) oraz niech $\delta_k = \frac{\delta}{g(k)}$
-		gdzie $\delta \ge \sum_{k=1}^{\infty} \frac{\delta}{g(k)}$ i $\ln(g(k)) \in o(f(k))$. Wtedy
-		$\lim\limits_{k\to\infty} e_{f(k),k} = 0$ 
-	\end{lemma}
-	\begin{proof}[Dowód Faktu \ref{lemma Bernstein race without maximum race length}]
-		\begin{gather*}
-			0\le X_i \le 1 \implies \overline{\sigma}_t^2 \le \frac{1}{2}\\
-			\epsilon_{f(k), k} \le  \sqrt{\frac{\ln(\frac{3g(k)}{\delta})}{f(k)}} + \frac{3  \ln{(\frac{3g(k)}{\delta})}}{f(k)}
-		\end{gather*}
-		Z założeń wiemy ze $ln(g(k)) \in o(f(k))$, zatem
-		\begin{gather*}
-			\lim\limits_{k\to\infty} \frac{  \ln{(\frac{3f(k)}{\delta})}}{f(k)} = 0
-		\end{gather*}
-		Co ostatecznie z tw. o trzech ciągach daje nam
-		\begin{gather*}
-			0\le \lim\limits_{k\to\infty} e_{f(k), k} \le 0 \implies \lim\limits_{t\to\infty} e_{f(k), k} = 0
-		\end{gather*}
-	\end{proof}
-	Lemat \ref{lemma Bernstein race without maximum race length} pozwala nam na to aby ograniczyć ilość przeprowadzanych testów. Ponieważ podejście oparte o testowane który z graczy jest lepszy po każdej rozegranej grze prowadzi do nadmiarowej ilości wykonywanych testów.
-	Przykładem funkcjami jakimi użyć do Lematu \ref{lemma Bernstein race without maximum race length} są $f(k) = k^2,\; g(k) = \frac{6/\pi^2}{k^2}$. Teaki dobór funkcji oznacza ze $k$-ty test odbywa się gdy liczba przeprowadzonych gier wynosi $k^2$.
+
+	
 	
 
 	
@@ -904,8 +1206,64 @@ Wprowadźmy podstawowe oznaczenia potrzebne nam do tego, aby móc zdefiniować c
 {\backmatter \chapter{Podsumowanie}}
 Podsumowanie w pracach matematycznych nie jest obligatoryjne. Warto jednak na zakończenie krótko napisać, co udało nam się zrobić w pracy, a czasem także o tym, czego nie udało się zrobić.
 
-{\backmatter \chapter{Dodatek}}
-Dodatek w pracach matematycznych również nie jest wymagany. Można w nim przedstawić np. jakiś dłuższy dowód, który z pewnych przyczyn pominęliśmy we właściwej części pracy lub (np. w przypadku prac statystycznych) umieścić dane, które analizowaliśmy.
+{\backmatter \chapter{Dodatek}} \label{Dodatek}
+\begin{proof}[Dowód Lematu \ref{lemma Bernstein race without maximum race length}]
+	\label{proof:lemma Bernstein race without maximum race length}Niech $X_1, X_2, \dots, X_t$ będzie ciągiem i.i.d. zmiennych losowych takim, że  $0 \le X_i \le 1$. Dodatkowo niech liczba rozegranych gier będzie funkcja zależną od k ($f(k) = t$) oraz niech $\delta_k = \frac{\delta}{g(k)}$
+	gdzie $\delta \ge \sum_{k=1}^{\infty} \frac{\delta}{g(k)}$ i $\ln(g(k)) \in o(f(k))$.
+	\begin{gather}
+		\label{proof:lemma Bernstein race without maximum race length 1}
+		0\le X_i \le 1 \implies \overline{\sigma}_t^2 \le \frac{1}{4}.
+	\end{gather}
+	Podkładają wynik \eqref{proof:lemma Bernstein race without maximum race length 1} do \eqref{Bernstein race without maximum race length} otrzymujemy 
+	\begin{gather*}
+		\epsilon_{f(k), k} \le  \sqrt{\frac{\ln(\frac{3g(k)}{\delta})}{2f(k)}} + \frac{3  \ln{(\frac{3g(k)}{\delta})}}{f(k)}.
+	\end{gather*}
+	Z założeń wiemy ze $ln(g(k)) \in o(f(k))$, zatem
+	\begin{gather*}
+		\lim\limits_{k\to\infty} \frac{  \ln{(\frac{3g(k)}{\delta})}}{f(k)} = 0.
+	\end{gather*}
+	Co ostatecznie z tw. o trzech ciągach daje nam $e_{f(k), k} = 0$.
+\end{proof}
+
+
+\begin{proof}[Dowód nierównosci (\ref{eq:error probability})]\label{proof:error probability}
+	 Prawdopodobieństwo popełnienia błędu $\alpha$ jest równe sumie prawdopodobieństw pomyłki w momencie przeprowadzenia k-tego testu plus prawdopodobieństwo pomyłki po przeprowadzaniu $\nmax$ testów. Z założeń wiemy, że teoretyczna warowność $\mu > 0.5$, zatem
+	\begin{align*}
+		\alpha=\;
+		&\probP_{\mu}(\overline{X}_{f(1)} + \epsilon_{1} \le 0.5) + \\
+		&\probP_{\mu}(\overline{X}_{f(1)} + \epsilon_{1} > 0.5)\probP_{\mu}(\overline{X}_{f(2)} + \epsilon_{2} \le 0.5) +\\
+		&\dots +\\
+		&\probP_{\mu}(\overline{X}_{f(1)} + \epsilon_{1} > 0.5)\probP_{\mu}(\overline{X}_{f(2)} + \epsilon_{2} > 0.5)\dots  \probP_{\mu}(\overline{X}_{f(\nmax)}+ \epsilon_{\nmax} \le 0.5)+\\
+		&\probP_{\mu}(\overline{X}_{f(1)} + \epsilon_{1} > 0.5)\dots  \probP_{\mu}(\overline{X}_{f(\nmax)}+ \epsilon_{\nmax} > 0.5)\probP_{\mu}(\overline{X}_{f(\nmax)} \le 0.5).
+	\end{align*}
+	Korzystając z prawdopodobieństwa zdarzenia przeciwnego otrzymujemy
+	\begin{align*}
+		\alpha=\;
+		&1 - \probP_{\mu}(\overline{X}_{f(1)} + \epsilon_{1} > 0.5) + \\
+		&\probP_{\mu}(\overline{X}_{f(1)} + \epsilon_{1} > 0.5)(1 - \probP_{\mu}(\overline{X}_{f(2)} + \epsilon_{2} > 0.5)) +\\
+		&\dots +\\
+		&\probP_{\mu}(\overline{X}_{f(1)} + \epsilon_{1} > 0.5)\probP_{\mu}(\overline{X}_{f(2)} + \epsilon_{2} > 0.5)\dots  (1-\probP_{\mu}(\overline{X}_{f(\nmax)}+ \epsilon_{\nmax} > 0.5))+\\
+		&\probP_{\mu}(\overline{X}_{f(1)} + \epsilon_{1} > 0.5)\dots  \probP_{\mu}(\overline{X}_{f(\nmax)}+ \epsilon_{\nmax} > 0.5)\probP_{\mu}(\overline{X}_{f(\nmax)} \le 0.5).
+	\end{align*}
+%	\begin{align*}
+%		\alpha =& \sum_{n=1}^{\nmax}\probP_{\mu}(\overline{X}_{f(n)} + \epsilon_{n} \le 0.5) \prod_{k=1}^{n-1} \probP_{\mu}(\overline{X}_{f(k)} + \epsilon_{k} > 0.5) +\\
+%		&\probP_{\mu}(\overline{X}_{f(\nmax)} \le 0.5) \prod_{k=1}^{\nmax}\probP_{\mu}(\overline{X}_{f(k)} + \epsilon_{k} > 0.5)
+%	\end{align*}
+%	Korzystając z prawdopodobieństwa zdarzenia przeciwnego otrzymujemy
+%	\begin{align*}
+%		\alpha =& \sum_{n=1}^{\nmax}\left (1-\probP_{\mu}(\overline{X}_{f(n)} + \epsilon_{n} > 0.5) \prod_{k=1}^{n-1} \probP_{\mu}(\overline{X}_{f(k)} + \epsilon_{k} > 0.5)\right)  +\\
+%		&\probP_{\mu}(\overline{X}_{f(\nmax)} \le 0.5) \prod_{k=1}^{\nmax}\probP_{\mu}(\overline{X}_{f(k)} + \epsilon_{k} > 0.5)
+%	\end{align*}
+	Powyższa suma upraszcza się przez teleskopowanie do postaci
+	\begin{align*}
+		\alpha =&  1- \prod^{\nmax}_{k=1} \probP_{\mu}(\overline{X}_{f(k)} +  \epsilon_{k} > 0.5)+ 
+		\probP_{\mu}(\overline{X}_{f(\nmax)} \le 0.5)\prod^{\nmax}_{k=1} \probP_{\mu}(\overline{X}_{f(k)} +  \epsilon_{k} > 0.5)\\
+		=& 1 - (1 - \probP_{\mu}(\overline{X}_{f(\nmax)} \le 0.5))
+		\prod^{\nmax}_{k=1} \probP_{\mu}(\overline{X}_{f(k)} +  \epsilon_{k} > 0.5) \\
+		=&1 -  \probP_{\mu}(\overline{X}_{f(\nmax)} > 0.5)
+		\prod^{\nmax}_{k=1} \probP_{\mu}(\overline{X}_{f(k)} +  \epsilon_{k} > 0.5).
+	\end{align*}
+\end{proof}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BIBLIOGRAFIA5

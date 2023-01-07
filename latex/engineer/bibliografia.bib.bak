@@ -61,24 +61,4 @@
   publisher = {Springer Science and Business Media {LLC}},
 }
 
-@InProceedings{Mnih_2008,
-  author    = {Volodymyr Mnih and Csaba Szepesv{\'{a}}ri and Jean-Yves Audibert},
-  title     = {Empirical Bernstein stopping},
-  booktitle = {Proceedings of the 25th international conference on Machine learning - {ICML} {\textquotesingle}08},
-  year      = {2008},
-  publisher = {{ACM} Press},
-  doi       = {10.1145/1390156.1390241},
-}
-
-@conference{Maron-1993-15969,
-author = {O. Maron and Andrew Moore},
-title = {Hoeffding Races: Accelerating Model Selection Search for Classification and Function Approximation},
-booktitle = {Proceedings of (NeurIPS) Neural Information Processing Systems},
-year = {1993},
-month = {November},
-pages = {59 - 66},
-publisher = {Morgan Kaufmann},
-}
-
-
 @Comment{jabref-meta: databaseType:bibtex;}
